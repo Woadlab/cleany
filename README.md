@@ -1,218 +1,168 @@
-# Cleany 🧹✨
+# Cleany
 
-> **The 100% Local, Privacy-by-Design, Free & Open-Source macOS Cleaner.**  
-> Zero Telemetry • Zero Daemons • Zero Subscriptions • Built in Swift 6 & SwiftUI.
+> **The 100% Local, Privacy-by-Design macOS Cleaner & Menu Bar Companion.**  
+> Zero telemetry &bull; Zero background daemons &bull; Zero subscriptions &bull; 100% Open Source.
 
-[![macOS](https://img.shields.io/badge/macOS-13.0%2B-blue?logo=apple)](https://www.apple.com/macos/)
-[![Swift](https://img.shields.io/badge/Swift-6.0-orange?logo=swift)](https://swift.org)
-[![Privacy](https://img.shields.io/badge/Telemetry-0%25%20(Local%20Only)-success)](#privacy--security-by-design)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
----
-
-## Why Cleany?
-
-Commercial Mac cleaners (such as CleanMyMac) are proprietary, charge costly annual subscriptions (\$39.95+/yr), install persistent background root helpers and daemons (`com.macpaw.CleanMyMac5.Agent`), and transmit analytics across third-party trackers.
-
-**Cleany is the open-source answer:**
-- 🛡️ **100% Local & Privacy-First:** Outgoing and incoming network access is cryptographically disabled in `Cleany.entitlements`. No analytics, no pings, no servers.
-- ⚡ **Zero Background Daemons:** Cleany only runs when you ask it to. No persistent launch agents, no memory hogs in your menu bar.
-- 🗑️ **Safe by Default:** Items are moved to the native macOS Trash (`FileManager.trashItem`) so accidental deletions can always be undone with `⌘Z`. Critical system paths are strictly guarded.
-- 🤖 **Next-Gen AI Clutter Detection:** Inspired by reverse-engineering CleanMyMac 5's newest scanning frameworks (`AIToolScanning`, `LocalModelScanning`), Cleany automatically cleans gigabytes of orphaned artifacts from **Claude Code**, **Cursor Agent**, **OpenCode**, **Ollama**, **LM Studio**, and **HuggingFace**.
-- 🛠️ **Developer Friendly:** Cleans DerivedData, SPM caches, npm/pnpm/yarn, Cargo targets, and Gradle build trees in seconds. Includes a standalone CLI tool (`cleany`) for terminal power users and automation scripts.
+[![macOS 14.0+](https://img.shields.io/badge/macOS-14.0%2B%20Sonoma%20%2F%20Sequoia-black?style=flat-square&logo=apple)](https://github.com/Woadlab/cleany)
+[![Swift 6](https://img.shields.io/badge/Swift-6.0%2B-F05138?style=flat-square&logo=swift&logoColor=white)](https://github.com/Woadlab/cleany)
+[![Architecture](https://img.shields.io/badge/Architecture-Apple%20Silicon%20%2F%20Intel-blue?style=flat-square)](https://github.com/Woadlab/cleany)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline-707BF5?style=flat-square)](https://github.com/Woadlab/cleany)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 ---
 
-## Comparison: Cleany vs. CleanMyMac 5
+Commercial Mac cleaners (such as CleanMyMac) are closed-source, charge aggressive annual subscriptions ($39.95+/year), install persistent background root helpers and launch daemons (`com.macpaw.CleanMyMac5.Agent`), and transmit analytics across third-party trackers.
 
-| Feature | Cleany (Open Source) | CleanMyMac 5 (Proprietary) |
+**Cleany** is the modern, open-source alternative built natively in **Swift 6** and **SwiftUI** with Apple Human Interface Guidelines and Liquid Glass aesthetics. It runs 100% on-device, disables network access at the entitlement level, and never installs background services.
+
+---
+
+## Installation
+
+### Method 1: One-Line Installer (cURL)
+
+Install Cleany directly to `/Applications` with a single terminal command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Woadlab/cleany/main/install.sh | bash
+```
+
+### Method 2: Direct Download (DMG) — Recommended
+
+Download the pre-compiled disk image from GitHub Releases:
+
+👉 **[Download Latest Cleany (DMG)](https://github.com/Woadlab/cleany/releases/latest)** *(or [Cleany.zip](https://github.com/Woadlab/cleany/releases/latest))*
+
+1. Open `Cleany.dmg` and drag `Cleany` to your `/Applications` shortcut.
+2. Launch `Cleany` from Spotlight or Launchpad.
+
+> *First launch note: If macOS Gatekeeper displays an unverified developer prompt, right-click (Control-click) `Cleany.app` &rarr; **Open**, or click **Open Anyway** under System Settings &rarr; Privacy & Security.*
+
+### Method 3: Homebrew Cask
+
+```bash
+brew tap woadlab/tap
+brew install --cask cleany
+```
+
+### Method 4: Build from Source
+
+```bash
+git clone https://github.com/Woadlab/cleany.git
+cd cleany
+./build.sh
+```
+
+The compiled application and disk image will be generated at `dist/Cleany.app` and `dist/Cleany.dmg`.
+
+---
+
+## Comparison: Cleany vs. CleanMyMac
+
+| Feature | Cleany (Open Source) | CleanMyMac (Proprietary) |
 | :--- | :---: | :---: |
-| **License** | **Free & Open Source (MIT)** | \$39.95 / year subscription |
-| **Telemetry & Analytics** | **0 bytes (Disabled via Entitlements)** | Mixpanel, Amplitude, GTM Proxy |
-| **Background Daemons** | **None (Zero overhead when closed)** | Root helper daemon + LaunchAgents |
+| **Pricing** | **Free & Open Source (MIT)** | $39.95 / year subscription |
+| **Telemetry & Trackers** | **0 bytes (Disabled via Entitlements)** | Mixpanel, Amplitude, GTM Proxy |
+| **Background Daemons** | **Zero (No LaunchAgents, zero memory overhead)** | Root helper daemon + LaunchAgents |
 | **AI Tool Clutter** *(Claude, Cursor, OpenCode)* | ✅ Yes | ✅ Yes |
-| **Local LLM Models** *(Ollama, LM Studio, HuggingFace)*| ✅ Yes | ✅ Yes |
-| **Developer Artifacts** *(DerivedData, npm, Cargo)* | ✅ Yes | Limited |
+| **Local LLM Checkpoints** *(Ollama, LM Studio, HF)* | ✅ Yes | ✅ Yes |
+| **Developer Artifacts** *(DerivedData, SPM, npm, Cargo)* | ✅ Yes | Limited |
 | **System Caches & Diagnostic Logs** | ✅ Yes | ✅ Yes |
 | **App Leftovers & Orphaned Containers** | ✅ Yes | ✅ Yes |
+| **Safe Deletion** | **Native macOS Trash (`⌘Z` Undoable)** | Permanent Deletion / Custom Helper |
+| **Space Lens Visualizer** | ✅ Yes (Apple System Settings style) | ✅ Yes |
 | **System Maintenance Tasks** *(DNS, RAM, APFS, Mail)* | ✅ Yes | ✅ Yes |
-| **Visual Disk Lens ("SpaceLens")** | ✅ Yes | ✅ Yes |
+| **Menu Bar Extra Companion** | ✅ Yes (Native SwiftUI popover) | ✅ Yes |
 | **Command Line Interface (CLI)** | ✅ Full-featured CLI (`cleany`) | ❌ None |
-| **Deletion Safety** | **macOS Trash (`⌘Z` Undoable)** | Permanent Deletion / Custom Helper |
 
 ---
 
-## Modules & Capabilities
+## Features
 
-### 1. Smart Care & Scanners
-- **AI Clutter (`AIScanner`):** Scans for cached prompt logs, agent intermediate outputs, and gigabytes of orphaned GGUF / model checkpoints (`~/.claude/projects`, `~/.cursor`, `~/.cache/opencode`, `~/.ollama/models`, `~/.cache/lm-studio`, `~/.cache/huggingface`).
-- **Developer Artifacts (`DeveloperScanner`):** Deep cleans Xcode DerivedData, Archives, SPM caches, CocoaPods, npm, pnpm, Cargo build target folders, and Gradle caches.
-- **System Junk (`SystemJunkScanner`):** Removes stale user cache files (`~/Library/Caches`), user logs (`~/Library/Logs`), and Apple crash diagnostics.
-- **App Leftovers (`AppLeftoversScanner`):** Identifies orphaned remnants left behind in `~/Library/Application Support` and `~/Library/Containers` after applications have been uninstalled.
-- **Trash Bins (`TrashBinsScanner`):** Safely computes and purges user trash across volumes.
+### 1. Smart Care
+One-click scan and cleanup across all five categories of redundant disk files:
+- **Cache & Modelli AI (`AIScanner`)**: Reclaims gigabytes from cached prompt traces, agent session logs, and local model checkpoints (`~/.claude/projects`, `~/.cursor`, `~/.cache/opencode`, `~/.ollama/models`, `~/.cache/lm-studio`, `~/.cache/huggingface`).
+- **Residui Sviluppo (`DeveloperScanner`)**: Deep cleans Xcode DerivedData, Archives, Swift Package Manager caches, CocoaPods, npm/pnpm caches, Cargo build target folders, and Gradle build trees.
+- **File di Sistema (`SystemJunkScanner`)**: Safely removes obsolete user cache files (`~/Library/Caches`), user logs (`~/Library/Logs`), and Apple crash diagnostics.
+- **Residui Applicazioni (`AppLeftoversScanner`)**: Identifies orphaned folders in `~/Library/Application Support` and `~/Library/Containers` left behind by uninstalled software.
+- **Cestino (`TrashBinsScanner`)**: Accurately computes cumulative trash size and item count via Finder scripting, respecting macOS TCC boundaries.
 
-### 2. System Maintenance (`MaintenanceRunner`)
-- **Flush DNS Cache:** Reloads `mDNSResponder` and purges directory service caches.
-- **Purge Inactive RAM:** Reclaims memory cached by inactive processes.
-- **Thin Time Machine Snapshots:** Uses APFS snapshot pruning (`tmutil thinlocalsnapshots`) to recover gigabytes of purged disk space without losing backups.
-- **Reindex Spotlight:** Triggers `mdimport -r` to fix broken Spotlight search indexing.
-- **Speed Up Apple Mail:** Runs SQLite `VACUUM` on Apple Mail `Envelope Index` databases to eliminate mailbox bloat.
+### 2. Menu Bar Extra Companion
+A native, lightweight status bar companion in the macOS menu bar:
+- At-a-glance health indicator (Protected / Attention).
+- One-click Smart Care cleanup directly from the menu bar.
+- Live Cestino weight with immediate "Svuota" action.
+- Physical storage gauge for Macintosh HD.
+- Quick deep-links to Space Lens, Maintenance, or the main application window.
 
-### 3. SpaceLens Disk Visualizer
-- Recursive, high-performance disk analyzer that visualizes disk usage across subdirectories, sorted by size with human-readable formatting and direct Finder integration.
+### 3. Lente Spazio (Space Lens)
+A high-performance recursive directory visualizer:
+- **Analyzed Directory Bar**: 100% coherent representation of the analyzed folder with zero math discrepancies.
+- **Responsive Legend Grid**: Clean multi-column layout without word-wrapping or syllable hyphenation (`LazyVGrid`).
+- **Physical SSD Overview**: Separate, dedicated System Settings-style storage platter showing free vs. used capacity on Macintosh HD.
+- Direct Finder integration (`Reveal in Finder`) for any discovered folder.
 
----
-
-## Installation & Usage
-
-### Option A: Native macOS App (`Cleany.app`)
-
-1. Build and bundle the app:
-   ```bash
-   ./scripts/bundle_app.sh
-   ```
-2. Launch directly:
-   ```bash
-   open dist/Cleany.app
-   ```
-3. Or install to your `/Applications` directory:
-   ```bash
-   cp -R dist/Cleany.app /Applications/
-   ```
-
-### Option B: Terminal CLI (`cleany`)
-
-Build the CLI binary:
-```bash
-swift build -c release
-sudo cp .build/release/cleany /usr/local/bin/cleany
-```
-
-#### Run a system scan:
-```bash
-cleany scan
-```
-*Output preview:*
-```
-🔍 Starting Cleany system scan...
-  [AI Tools & Models] Found 4 items (3.20 GB)
-  [Developer Artifacts] Found 12 items (5.40 GB)
-  [System Junk] Found 38 items (820.5 MB)
-  [App Leftovers] Found 14 items (148.0 MB)
-  [Trash Bins] Found 3 items (5.2 MB)
-
-==================================================
-Total Reclaimable Space: 9.57 GB (71 items)
-==================================================
-```
-
-#### Clean with Safe Trash Default:
-```bash
-# Dry run first
-cleany clean --dry-run
-
-# Clean AI clutter only
-cleany clean --category ai
-
-# Clean all categories (moves to macOS Trash for safety)
-cleany clean
-
-# Permanent deletion (bypasses Trash)
-cleany clean --permanent
-```
-
-#### Run Maintenance Tasks:
-```bash
-# List available maintenance tasks
-cleany maintenance list
-
-# Run specific tasks
-cleany maintenance run flush-dns
-cleany maintenance run purge-ram
-cleany maintenance run thin-time-machine
-```
+### 4. Manutenzione di Sistema (Maintenance)
+Native, zero-daemon system maintenance routines executed locally with standard user privileges:
+- **Svuota Cache DNS**: Flushes `mDNSResponder` and local directory service caches.
+- **Libera RAM Inattiva**: Reclaims memory cached by inactive processes via native `purge`.
+- **Ottimizza Istantanee Time Machine**: Safely thins local APFS snapshots (`tmutil thinlocalsnapshots`).
+- **Ricostruisci Indice Spotlight**: Reindexes search metadata (`mdimport -r`).
+- **Velocizza Apple Mail**: Performs SQLite `VACUUM` on `Envelope Index` databases to eliminate mailbox lag.
 
 ---
 
 ## Privacy & Security by Design
 
-Cleany enforces privacy at both the compile-time and code-signing layers:
+Cleany enforces strict security guarantees through its sandbox configuration:
 
-1. **Explicit Zero-Network Entitlements:**
-   ```xml
-   <key>com.apple.security.network.client</key>
-   <false/>
-   <key>com.apple.security.network.server</key>
-   <false/>
-   ```
-   macOS kernel-level enforcement guarantees that the application cannot initiate or accept any network sockets.
+```xml
+<!-- Cleany.entitlements -->
+<key>com.apple.security.network.client</key>
+<false/>
+<key>com.apple.security.network.server</key>
+<false/>
+```
 
-2. **Guarded Path Invariants:**
-   `FileUtilities.isSafeToDelete(path:)` prevents deletion of:
-   - Root filesystem (`/`, `/System`, `/usr`, `/bin`, `/sbin`, `/Applications`)
-   - User home directory root (`~`)
-   - Personal user documents (`~/Desktop`, `~/Documents`, `~/Downloads`, `~/Pictures`, `~/Music`)
-
-3. **Reversible Trash Defaults:**
-   Deletions invoke `FileManager.default.trashItem(at:resultingItemURL:)` rather than `removeItem(at:)`. You can restore any cleaned file at any time from the native macOS Trash.
+- **0 Network Requests**: Outgoing network traffic is blocked at the OS kernel level.
+- **0 Telemetry / Analytics**: No crash reporters, no tracking IDs, no remote pings.
+- **Undoable Deletions**: Files are moved to `~/.Trash` via `FileManager.default.trashItem()`. You can restore any deleted item at any time using `⌘Z` in Finder.
 
 ---
 
-## Building & Developing
+## Command Line Interface (CLI)
 
-### Requirements
-- macOS 13.0 (Ventura) or later
-- Xcode 15+ or macOS Command Line Tools with Swift 6.0
+Cleany includes a standalone command-line tool for terminal workflows:
 
-### Run Tests
 ```bash
-swift test
-```
+# Build the CLI tool
+swift build -c release --product cleany
 
-### Build Everything
-```bash
-swift build
-```
+# Run a complete scan
+.build/release/cleany scan
 
----
+# Clean all detected items
+.build/release/cleany clean
 
-## Architecture
-
-```
-cleany/
-├── Sources/
-│   ├── CleanyCore/              # Reusable engine & domain framework
-│   │   ├── Models/              # JunkCategory, JunkItem, ScanProgress, CleanResult
-│   │   ├── Scanners/            # AIScanner, DeveloperScanner, SystemJunkScanner, etc.
-│   │   ├── Maintenance/         # MaintenanceRunner (DNS, RAM, APFS, Mail)
-│   │   └── Engine/              # SafeDeletionManager, FileUtilities, SpaceLensScanner
-│   ├── CleanyCLI/               # Command-line interface executable (cleany)
-│   └── CleanyApp/               # SwiftUI macOS Application
-│       ├── Components/          # ScanningGaugeView, MetricCardView, JunkRowView
-│       ├── Views/               # DashboardView, CategoryDetailView, SpaceLensView, etc.
-│       └── State/               # AppState (ObservableObject)
-├── Tests/
-│   └── CleanyCoreTests/         # Swift Testing suite
-├── scripts/
-│   ├── bundle_app.sh            # Packages, signs & verifies Cleany.app
-│   └── generate_icon.py         # Generates multi-res Apple AppIcon.icns
-├── Cleany.entitlements          # Zero-telemetry security profile
-└── Package.swift                # Swift Package Manager definition
+# Clean a specific category
+.build/release/cleany clean --category aiClutter
 ```
 
 ---
 
 ## Contributing
 
-Contributions, bug reports, and pull requests are welcome! If you want to add support for a new AI framework, developer cache, or maintenance task:
-1. Fork the repo and create a feature branch.
-2. Implement your scanner under `Sources/CleanyCore/Scanners/` conforming to `JunkScanner`.
-3. Add unit tests under `Tests/CleanyCoreTests/`.
-4. Submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
+
+```bash
+git clone https://github.com/Woadlab/cleany.git
+cd cleany
+swift test
+```
 
 ---
 
 ## License
 
-Cleany is distributed under the [MIT License](LICENSE).  
-Copyright © 2026 Woadlab & Cleany Contributors.
+Cleany is distributed under the **MIT License**. See [LICENSE](LICENSE) for details.  
+Copyright &copy; 2026 Woadlab &amp; Cleany Contributors.
