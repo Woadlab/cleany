@@ -1,6 +1,6 @@
 ### Cleany 1.0.0 — 100% Local, Privacy-by-Design macOS Cleaner & Menu Bar Companion
 
-Cleany is the free, open-source alternative to commercial Mac cleaners. Built natively in Swift 6 and SwiftUI with Apple Human Interface Guidelines and Liquid Glass aesthetics, Cleany operates 100% locally with zero telemetry, zero analytics, and zero background daemons.
+Cleany is a free, 100% local, open-source macOS cleaner and system health companion. Built natively in Swift 6 and SwiftUI with Apple Human Interface Guidelines and Liquid Glass aesthetics, Cleany operates 100% locally with zero telemetry, zero analytics, and zero background daemons.
 
 ---
 

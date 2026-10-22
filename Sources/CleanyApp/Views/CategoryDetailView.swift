@@ -163,8 +163,7 @@ public struct CategoryDetailView: View {
                     .padding(.horizontal, 28)
                     .padding(.vertical, 12)
                 }
-                .buttonStyle(.glassProminent)
-                .tint(.red)
+                .cleanyGlassProminent(tint: .red)
                 .clipShape(Capsule())
                 .padding(.top, 12)
             }
@@ -287,7 +286,7 @@ public struct CategoryDetailView: View {
                                 Button("Scansiona \(category.title)") {
                                     state.startScan(category: category)
                                 }
-                                .buttonStyle(.glassProminent)
+                                .cleanyGlassProminent()
                                 .clipShape(Capsule())
                             }
                         }
@@ -334,7 +333,7 @@ public struct CategoryDetailView: View {
                         .padding(.horizontal, 18)
                         .padding(.vertical, 8)
                     }
-                    .buttonStyle(.glass)
+                    .cleanyGlass()
                     .clipShape(Capsule())
                     .disabled(state.isScanning)
 
@@ -353,8 +352,7 @@ public struct CategoryDetailView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 10)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(Color.accentColor)
+                    .cleanyGlassProminent(tint: Color.accentColor)
                     .clipShape(Capsule())
                     .disabled(selectedCount == 0 || state.isCleaning || state.isScanning)
                 }

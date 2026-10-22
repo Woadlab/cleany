@@ -100,8 +100,7 @@ public struct SpaceLensView: View {
                         .padding(.horizontal, 20)
                         .padding(.vertical, 8)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(.teal)
+                    .cleanyGlassProminent(tint: .teal)
                     .clipShape(Capsule())
                     .disabled(state.isScanningSpace)
                 }
@@ -314,8 +313,7 @@ public struct SpaceLensView: View {
                             Button("Avvia Scansione Spazio") {
                                 state.scanSpaceLens()
                             }
-                            .buttonStyle(.glassProminent)
-                            .tint(.teal)
+                            .cleanyGlassProminent(tint: .teal)
                             .clipShape(Capsule())
                         }
                         Spacer()

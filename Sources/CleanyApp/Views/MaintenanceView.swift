@@ -123,7 +123,7 @@ public struct MaintenanceView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 7)
                 }
-                .buttonStyle(.glassProminent)
+                .cleanyGlassProminent()
                 .clipShape(Capsule())
             }
         }

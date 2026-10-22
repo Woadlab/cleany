@@ -159,8 +159,7 @@ public struct MenuBarView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 7)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(.red)
+                    .cleanyGlassProminent(tint: .red)
                     .clipShape(Capsule())
                 } else {
                     Button {
@@ -175,8 +174,7 @@ public struct MenuBarView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 7)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(Color.accentColor)
+                    .cleanyGlassProminent(tint: Color.accentColor)
                     .clipShape(Capsule())
                 }
             }
@@ -208,7 +206,7 @@ public struct MenuBarView: View {
                         SoundHaptics.clean()
                         state.cleanSelected(category: .trashBins)
                     }
-                    .buttonStyle(.glass)
+                    .cleanyGlass()
                     .clipShape(Capsule())
                     .controlSize(.mini)
                     .disabled(state.categorySize(.trashBins) == 0 || state.isCleaning)
@@ -275,7 +273,7 @@ public struct MenuBarView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.glass)
+                .cleanyGlass()
                 .clipShape(Capsule())
 
                 Button {
@@ -291,7 +289,7 @@ public struct MenuBarView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 6)
                 }
-                .buttonStyle(.glass)
+                .cleanyGlass()
                 .clipShape(Capsule())
             }
 

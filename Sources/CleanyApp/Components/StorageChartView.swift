@@ -193,7 +193,7 @@ public struct StorageChartView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 10)
                     }
-                    .buttonStyle(.glass)
+                    .cleanyGlass()
                     .clipShape(Capsule())
                     .disabled(true)
                 } else if hasCompletedInitialScan && totalBytes > 0 {
@@ -211,8 +211,7 @@ public struct StorageChartView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 10)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(.red)
+                    .cleanyGlassProminent(tint: .red)
                     .clipShape(Capsule())
 
                     // Secondary Rescan Button
@@ -228,7 +227,7 @@ public struct StorageChartView: View {
                         .padding(.horizontal, 18)
                         .padding(.vertical, 10)
                     }
-                    .buttonStyle(.glass)
+                    .cleanyGlass()
                     .clipShape(Capsule())
                 } else {
                     // Primary Scan Mac Button with native .buttonStyle(.glassProminent)
@@ -244,8 +243,7 @@ public struct StorageChartView: View {
                         .padding(.horizontal, 28)
                         .padding(.vertical, 11)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(Color.accentColor)
+                    .cleanyGlassProminent(tint: Color.accentColor)
                     .clipShape(Capsule())
                 }
             }
