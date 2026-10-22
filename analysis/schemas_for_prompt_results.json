@@ -1,0 +1,322 @@
+[
+    {
+        "contextID": "userCacheFiles",
+        "schema": {
+            "name": "user cache file",
+            "description": "Schema for user cache file object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the user cache file"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "What this user cache file does and what it's used for. Explain that if you have issues with particular functionality related to this cache, cleaning it may help fix these issues, give examples."
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application related to this user cache file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application does and what it's used for"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) summarizing the purpose of this user cache file"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "universalBinaries",
+        "schema": {
+            "name": "universal binary",
+            "description": "Schema for universal binary object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the app related to this universal binary"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Explain that this is an unused copy of application for a different processor. Explain that developers put 2 versions of code in their apps: for Intel based Macbooks and Apple Silicon. And user needs only one of these copies"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application does and what it's used for"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) summarizing the purpose of this application"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "systemCacheFiles",
+        "schema": {
+            "name": "system cache file",
+            "description": "Schema for system cache file object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the system cache file"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "What this system cache file does and what it's used for. Explain that if you have issues with particular functionality related to this cache, cleaning it may help fix these issues, give examples."
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application related to this system cache file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application does and what it's used for"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) summarizing the purpose of this system cache file"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "systemLogFiles",
+        "schema": {
+            "name": "system log file",
+            "description": "Schema for system log file object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the system log file"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "What this system log file does and what it's used for. Explain that technical experts use this file for debugging, give specific examples of what can be debugged with it. And say that if you don't want to debug anything, you can remove the file without a second thought"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) summarizing the purpose of this system log file"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "userLogFiles",
+        "schema": {
+            "name": "user log file",
+            "description": "Schema for user log file object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the user log file"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "What this user log file does and what it's used for. Explain that it is like diary of activity, give specific examples about this particular file. Mention that old logs are useless, accumulate over time and may take up a lot of space and can be removed"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application related to this user log file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application does and what it's used for"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) summarizing the purpose of this user log file"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "brokenLoginItem",
+        "schema": {
+            "name": "broken login item",
+            "description": "Schema for broken login item object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the app or process related to this broken login item"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Explain why this item is a broken login item. Say that this is remaining link to a process or application that was likely deleted. Give specific example"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application or proceess related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application is and what it's used for"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "brokenPreferences",
+        "schema": {
+            "name": "broken preferences",
+            "description": "Schema for broken preferences object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the app or process related to this broken preferences item"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Explaination why this preferences item is a broken preferences item. Explain that this item is broken either because it casues crashes of realted application or becasue the related application is no longer installed.  Explain that if you have issues related to this item, removing it may fix it. Give specific examples"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application or proceess related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the related application is and what it's used for"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "loginItem",
+        "schema": {
+            "name": "login item",
+            "description": "Schema for login item object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the app or process related to this login item"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Specific reason what feature of this process or application makes it required to run in the background and start with macOS. Start with: This application works in the backgound and starts with macOS because"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application or proceess related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "Description of the related application, what it does and what it's used for"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "backgroundItem",
+        "schema": {
+            "name": "background item",
+            "description": "Schema for background item object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the app or process related to this login item"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Specific reason what feature of this process or application makes it required to run in the background. Start with: This application works in the backgound because"
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application or proceess related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "Description of the related application, what it does and what it's used for"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "leftoverFromApplication",
+        "schema": {
+            "name": "leftover from application",
+            "description": "Schema for leftovers from application (redundant files such as preferences and configurations for appliaction that has been uninstalled) object description",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Full name of the application related to this leftover"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Explanation that these files are leftovers from an application that has been uninstalled or updated, but some redundant preferences and configurations still take up space on the Mac."
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the application related to this file"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "Description of the related application, what it does and what it's used for"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "aiToolJunk",
+        "schema": {
+            "name": "AI tool junk",
+            "description": "disposable junk files of an AI developer tool",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "Name of the AI tool this junk belongs to, exactly as given in the provided application information"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Two or three sentences that begin with 'These files' and summarize what was collected for cleanup, based on the provided information: the disposable data the tool accumulated while it works and why cleaning it is safe. Name the tool at most once and never explain what the tool itself does — that belongs only in applicationDescription."
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the AI tool, exactly as given in the provided application information"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What this AI tool does and what it's used for, based on the provided tool description"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Short category (≤3 words) for the tool itself, such as AI Assistant, Code Editor, or Developer Tool"
+                }
+            ]
+        }
+    },
+    {
+        "contextID": "aiToolJunkKind",
+        "schema": {
+            "name": "AI tool junk kind",
+            "description": "group of junk files of one kind left by an AI developer tool, where the provided junk kind names the kind",
+            "properties": [
+                {
+                    "name": "fileName",
+                    "description": "The junk kind stated in the provided information as a short plural title, such as Caches or Logs"
+                },
+                {
+                    "name": "fileDescription",
+                    "description": "Two or three sentences that begin with 'These files' and restate the provided junk kind information in your own words: what these files are, why the AI tool created them, and why cleaning them is safe. Describe only the junk kind stated in the provided information and never mention other kinds."
+                },
+                {
+                    "name": "relatedAppName",
+                    "description": "Full name of the AI tool that owns these files, exactly as given in the provided application information"
+                },
+                {
+                    "name": "applicationDescription",
+                    "description": "What the owning AI tool does and what it's used for, based on the provided tool description"
+                },
+                {
+                    "name": "tagName",
+                    "description": "Copy the junk kind stated in the provided information as a capitalized tag of at most 3 words, such as Caches or Logs"
+                }
+            ]
+        }
+    }
+]
