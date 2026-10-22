@@ -1,8 +1,9 @@
 import SwiftUI
 import CleanyCore
 
-/// Ultra-refined macOS circular gauge with proportional multi-category segmented arcs,
-/// ambient glow physics, and real-time live scan telemetry.
+/// Ultra-premium CleanMyMac 5 / Apple Intelligence-grade Glass Lens hero centerpiece.
+/// Features multi-layer specular glass, precision tick marks, luminous segmented neon arcs,
+/// and live telemetry choreography.
 public struct ScanningGaugeView: View {
     public let isScanning: Bool
     public let hasScanned: Bool
@@ -12,7 +13,8 @@ public struct ScanningGaugeView: View {
     public let categorySizes: [(JunkCategory, UInt64)]
 
     @LocalVar private var rotation: Double = 0
-    @LocalVar private var isPulsing: Bool = false
+    @LocalVar private var pulse: Bool = false
+    @LocalVar private var levitate: CGFloat = 0
 
     public init(
         isScanning: Bool,
@@ -35,59 +37,76 @@ public struct ScanningGaugeView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 22) {
+        VStack(spacing: 16) {
             ZStack {
-                // Ambient dynamic glow
+                // Layer 1: Ambient Luminous Aura
                 Circle()
                     .fill(
                         RadialGradient(
                             colors: [
-                                isScanning ? Color.blue.opacity(0.14) :
-                                (hasScanned && itemCount > 0 ? Color.indigo.opacity(0.10) : Color.clear),
+                                auraColor.opacity(isScanning ? 0.28 : (hasScanned && itemCount > 0 ? 0.20 : 0.12)),
+                                auraColor.opacity(0.04),
                                 Color.clear
                             ],
                             center: .center,
-                            startRadius: 50,
-                            endRadius: 140
+                            startRadius: 40,
+                            endRadius: 150
                         )
                     )
-                    .frame(width: 270, height: 270)
-                    .scaleEffect(isPulsing ? 1.05 : 0.98)
+                    .frame(width: 300, height: 300)
+                    .scaleEffect(pulse ? 1.06 : 0.96)
                     .animation(
-                        isScanning ? .easeInOut(duration: 1.4).repeatForever(autoreverses: true) : .default,
-                        value: isPulsing
+                        isScanning ? .easeInOut(duration: 1.2).repeatForever(autoreverses: true) :
+                                     .easeInOut(duration: 3.5).repeatForever(autoreverses: true),
+                        value: pulse
                     )
 
-                // Outer subtle track
+                // Layer 2: Precision Outer Chrono Tick Ring (60 radial ticks)
                 Circle()
-                    .stroke(Color.primary.opacity(0.05), lineWidth: 12)
-                    .frame(width: 220, height: 220)
+                    .stroke(Color.white.opacity(0.05), lineWidth: 1)
+                    .frame(width: 254, height: 254)
 
+                ForEach(0..<48) { tick in
+                    Rectangle()
+                        .fill(Color.white.opacity(tick % 4 == 0 ? 0.25 : 0.08))
+                        .frame(width: tick % 4 == 0 ? 1.5 : 1, height: tick % 4 == 0 ? 6 : 3)
+                        .offset(y: -123)
+                        .rotationEffect(.degrees(Double(tick) * (360.0 / 48.0)))
+                }
+
+                // Layer 3: Outer Glass Track
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.12), Color.white.opacity(0.02)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 10
+                    )
+                    .frame(width: 232, height: 232)
+
+                // Layer 4: Active Energy Ring
                 if isScanning {
-                    // Precision sweeping radar ring
+                    // Sweeping Laser Radar Ring
                     Circle()
-                        .trim(from: 0.05, to: 0.8)
+                        .trim(from: 0.05, to: 0.75)
                         .stroke(
                             AngularGradient(
                                 gradient: Gradient(colors: [
-                                    Color.blue.opacity(0.05),
-                                    Color.cyan.opacity(0.8),
-                                    Color.blue
+                                    Color.cyan.opacity(0.0),
+                                    Color.cyan.opacity(0.4),
+                                    Color.blue,
+                                    Color.purple
                                 ]),
                                 center: .center
                             ),
-                            style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                            style: StrokeStyle(lineWidth: 10, lineCap: .round)
                         )
-                        .frame(width: 220, height: 220)
+                        .frame(width: 232, height: 232)
                         .rotationEffect(.degrees(rotation))
-                        .onAppear {
-                            isPulsing = true
-                            withAnimation(.linear(duration: 1.8).repeatForever(autoreverses: false)) {
-                                rotation = 360
-                            }
-                        }
                 } else if hasScanned && totalBytes > 0 {
-                    // Segmented macOS Activity-style multi-color ring
+                    // Multi-Segmented Luminous Neon Arcs
                     let segments = calculateSegments()
                     ForEach(0..<segments.count, id: \.self) { idx in
                         let seg = segments[idx]
@@ -95,101 +114,197 @@ public struct ScanningGaugeView: View {
                             .trim(from: seg.start, to: seg.end)
                             .stroke(
                                 seg.color,
-                                style: StrokeStyle(lineWidth: 12, lineCap: .butt)
+                                style: StrokeStyle(lineWidth: 10, lineCap: .butt)
                             )
-                            .frame(width: 220, height: 220)
+                            .frame(width: 232, height: 232)
                             .rotationEffect(.degrees(-90))
+                            .shadow(color: seg.color.opacity(0.4), radius: 6, x: 0, y: 0)
                     }
                 } else if hasScanned && itemCount == 0 {
-                    // Clean emerald ring
+                    // Spotless Emerald Ring
                     Circle()
-                        .stroke(Color.green.opacity(0.75), style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                        .frame(width: 220, height: 220)
+                        .stroke(
+                            LinearGradient(colors: [Color.green, Color.teal], startPoint: .topLeading, endPoint: .bottomTrailing),
+                            style: StrokeStyle(lineWidth: 9, lineCap: .round)
+                        )
+                        .frame(width: 232, height: 232)
+                        .shadow(color: Color.green.opacity(0.5), radius: 8, x: 0, y: 0)
                 }
 
-                // Center Information
-                VStack(spacing: 8) {
+                // Layer 5: Inner Frosted Glass Lens
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 0.12, green: 0.13, blue: 0.18).opacity(0.85),
+                                Color(red: 0.07, green: 0.075, blue: 0.11).opacity(0.95)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 206, height: 206)
+                    .overlay(
+                        // Specular Glass Edge Highlight
+                        Circle()
+                            .stroke(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(0.35),
+                                        Color.white.opacity(0.05),
+                                        Color.black.opacity(0.4)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ),
+                                lineWidth: 1.5
+                            )
+                    )
+                    .shadow(color: Color.black.opacity(0.4), radius: 16, x: 0, y: 8)
+
+                // Layer 6: Centerpiece Telemetry Content
+                VStack(spacing: 6) {
                     if isScanning {
                         Image(systemName: "sparkle.magnifyingglass")
-                            .font(.system(size: 34, weight: .semibold))
+                            .font(.system(size: 32, weight: .semibold))
                             .foregroundStyle(
-                                LinearGradient(colors: [.blue, .cyan], startPoint: .top, endPoint: .bottom)
+                                LinearGradient(colors: [Color.cyan, Color.blue], startPoint: .top, endPoint: .bottom)
                             )
+                            .shadow(color: Color.cyan.opacity(0.6), radius: 8)
 
-                        Text("Deep Scanning...")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(.primary)
+                        Text("ANALYZING")
+                            .font(.system(size: 11, weight: .bold))
+                            .tracking(2.5)
+                            .foregroundStyle(.white.opacity(0.9))
 
-                        Text("Inspecting caches & models")
+                        Text("Computing sizes...")
                             .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.45))
 
                     } else if hasScanned && itemCount > 0 {
-                        Text(formattedSize)
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(.primary)
-                            .contentTransition(.numericText())
+                        // Split size number and unit
+                        VStack(spacing: 2) {
+                            Text(formattedSize)
+                                .font(.system(size: 36, weight: .bold, design: .rounded))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.white, .white.opacity(0.9)],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .contentTransition(.numericText())
 
-                        HStack(spacing: 4) {
-                            Text("\(itemCount)")
-                                .fontWeight(.semibold)
-                            Text("safe items found")
+                            Text("RECLAIMABLE")
+                                .font(.system(size: 10, weight: .bold))
+                                .tracking(2.2)
+                                .foregroundStyle(Color.cyan.opacity(0.9))
+
+                            Text("\(itemCount) safe items")
+                                .font(.system(size: 11.5, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.5))
+                                .padding(.top, 2)
                         }
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
 
                     } else if hasScanned && itemCount == 0 {
-                        Image(systemName: "checkmark.circle.fill")
+                        Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 40))
-                            .foregroundStyle(.green)
+                            .foregroundStyle(
+                                LinearGradient(colors: [.green, .mint], startPoint: .top, endPoint: .bottom)
+                            )
+                            .shadow(color: Color.green.opacity(0.5), radius: 10)
 
-                        Text("Spotless")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundStyle(.primary)
+                        Text("SPOTLESS")
+                            .font(.system(size: 12, weight: .bold))
+                            .tracking(2.5)
+                            .foregroundStyle(.white.opacity(0.95))
 
-                        Text("Your Mac is running clean")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.secondary)
+                        Text("Mac is in peak shape")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.white.opacity(0.5))
 
                     } else {
+                        // Idle Ready State
                         Image(systemName: "sparkles")
-                            .font(.system(size: 38, weight: .medium))
+                            .font(.system(size: 36, weight: .semibold))
                             .foregroundStyle(
-                                LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                LinearGradient(
+                                    colors: [Color(red: 0.5, green: 0.6, blue: 1.0), Color(red: 0.75, green: 0.45, blue: 0.98)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
                             )
+                            .shadow(color: Color.purple.opacity(0.5), radius: 10)
+                            .offset(y: levitate)
 
-                        Text("Smart Care")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundStyle(.primary)
+                        Text("SMART CARE")
+                            .font(.system(size: 11, weight: .bold))
+                            .tracking(2.4)
+                            .foregroundStyle(.white.opacity(0.95))
 
-                        Text("100% Local • Zero Telemetry")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(.secondary)
+                        Text("5 Modules Armed")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.white.opacity(0.45))
                     }
                 }
             }
+            .frame(width: 270, height: 270)
+            .onAppear {
+                pulse = true
+                withAnimation(.easeInOut(duration: 2.2).repeatForever(autoreverses: true)) {
+                    levitate = -5
+                }
+                if isScanning {
+                    withAnimation(.linear(duration: 1.8).repeatForever(autoreverses: false)) {
+                        rotation = 360
+                    }
+                }
+            }
+            .onChange(of: isScanning) { _, scanning in
+                if scanning {
+                    withAnimation(.linear(duration: 1.8).repeatForever(autoreverses: false)) {
+                        rotation = 360
+                    }
+                } else {
+                    rotation = 0
+                }
+            }
 
-            // Real-time active telemetry ticker
+            // Real-Time Live Telemetry Glass Pill
             if isScanning, let path = currentPath, !path.isEmpty {
                 HStack(spacing: 8) {
                     ProgressView()
                         .controlSize(.mini)
 
                     Text(path)
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 10.5, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.7))
                         .lineLimit(1)
                         .truncationMode(.middle)
-                        .frame(maxWidth: 440)
+                        .frame(maxWidth: 420)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 6)
-                .background(Color.primary.opacity(0.04))
-                .clipShape(Capsule())
-                .transition(.opacity)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.06))
+                        .overlay(Capsule().stroke(Color.white.opacity(0.10), lineWidth: 1))
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.96)))
             }
         }
-        .padding(.vertical, 4)
+    }
+
+    private var auraColor: Color {
+        if isScanning {
+            return Color.cyan
+        } else if hasScanned && totalBytes > 0 {
+            return Color.blue
+        } else if hasScanned && itemCount == 0 {
+            return Color.green
+        } else {
+            return Color(red: 0.45, green: 0.35, blue: 0.85)
+        }
     }
 
     private struct ArcSegment {
@@ -217,15 +332,15 @@ public struct ScanningGaugeView: View {
     private func colorForCategory(_ cat: JunkCategory) -> Color {
         switch cat {
         case .aiClutter:
-            return .purple
+            return Color(red: 0.75, green: 0.35, blue: 0.95)
         case .developerJunk:
-            return .blue
+            return Color(red: 0.25, green: 0.55, blue: 0.98)
         case .systemJunk:
-            return .teal
+            return Color(red: 0.15, green: 0.75, blue: 0.75)
         case .appLeftovers:
-            return .orange
+            return Color(red: 0.98, green: 0.55, blue: 0.15)
         case .trashBins:
-            return .red
+            return Color(red: 0.95, green: 0.28, blue: 0.32)
         }
     }
 }

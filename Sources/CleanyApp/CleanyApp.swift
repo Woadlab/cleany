@@ -9,6 +9,7 @@ struct CleanyApp: App {
         WindowGroup {
             NavigationSplitView {
                 SidebarView(state: state)
+                    .navigationSplitViewColumnWidth(min: 230, ideal: 245, max: 280)
             } detail: {
                 switch state.selectedNav {
                 case .smartCare:
@@ -21,7 +22,7 @@ struct CleanyApp: App {
                     SpaceLensView(state: state)
                 }
             }
-            .frame(minWidth: 940, minHeight: 640)
+            .frame(minWidth: 980, minHeight: 680)
             .navigationTitle("Cleany")
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {

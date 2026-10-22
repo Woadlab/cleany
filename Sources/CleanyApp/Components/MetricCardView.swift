@@ -1,8 +1,9 @@
 import SwiftUI
 import CleanyCore
 
-/// Interactive card presenting a single junk category with proportional share bar,
-/// refined typography, and responsive hover feedback.
+/// Double-Bezel (Doppelrand) hardware-inspired interactive category card.
+/// Features nested concentric glass containers, glowing neon micro-bars,
+/// and haptic spring physics.
 public struct MetricCardView: View {
     public let category: JunkCategory
     public let count: Int
@@ -34,15 +35,26 @@ public struct MetricCardView: View {
             SoundHaptics.tap()
             onSelect()
         } label: {
-            VStack(alignment: .leading, spacing: 12) {
+            // Outer Bezel Shell (Doppelrand architecture)
+            VStack(alignment: .leading, spacing: 10) {
+                // Header: Icon + Badge / Share %
                 HStack(alignment: .center) {
                     ZStack {
                         Circle()
-                            .fill(categoryColor.opacity(0.12))
-                            .frame(width: 38, height: 38)
+                            .fill(
+                                RadialGradient(
+                                    colors: [categoryColor.opacity(0.28), categoryColor.opacity(0.08)],
+                                    center: .center,
+                                    startRadius: 2,
+                                    endRadius: 20
+                                )
+                            )
+                            .frame(width: 36, height: 36)
+                            .overlay(Circle().stroke(categoryColor.opacity(0.35), lineWidth: 1))
+                            .shadow(color: categoryColor.opacity(isHovered ? 0.45 : 0.15), radius: 6, x: 0, y: 2)
 
                         Image(systemName: category.systemImage)
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(categoryColor)
                     }
 
@@ -50,82 +62,117 @@ public struct MetricCardView: View {
 
                     if let badge = category.badge {
                         Text(badge)
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.system(size: 8.5, weight: .bold))
+                            .tracking(0.5)
                             .padding(.horizontal, 7)
-                            .padding(.vertical, 3)
-                            .background(Color.pink.opacity(0.15))
-                            .foregroundStyle(.pink)
+                            .padding(.vertical, 2.5)
+                            .background(Color.pink.opacity(0.20))
+                            .foregroundStyle(Color(red: 1.0, green: 0.4, blue: 0.6))
                             .clipShape(Capsule())
+                            .overlay(Capsule().stroke(Color.pink.opacity(0.35), lineWidth: 0.8))
                     } else if percentage > 0.01 {
                         Text("\(Int(percentage * 100))%")
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .foregroundStyle(categoryColor.opacity(0.9))
+                            .font(.system(size: 9.5, weight: .bold, design: .rounded))
+                            .foregroundStyle(categoryColor)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(categoryColor.opacity(0.10))
+                            .background(categoryColor.opacity(0.12))
                             .clipShape(Capsule())
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 2) {
+                // Title & Subtitle
+                VStack(alignment: .leading, spacing: 1) {
                     Text(category.title)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.primary)
+                        .font(.system(size: 13.5, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.95))
+                        .lineLimit(1)
 
-                    Text(count > 0 ? "\(count) item\(count == 1 ? "" : "s") found" : "Clean")
+                    Text(count > 0 ? "\(count) items detected" : "Clean")
                         .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.45))
                 }
 
-                // Proportional horizontal mini bar
+                // Proportional Luminous Mini-Bar
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule()
-                            .fill(Color.primary.opacity(0.04))
-                            .frame(height: 4)
+                            .fill(Color.white.opacity(0.06))
+                            .frame(height: 3.5)
 
                         Capsule()
-                            .fill(categoryColor)
-                            .frame(width: max(4, geo.size.width * CGFloat(min(1.0, max(0.0, percentage)))), height: 4)
+                            .fill(
+                                LinearGradient(
+                                    colors: [categoryColor.opacity(0.7), categoryColor],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(width: max(4, geo.size.width * CGFloat(min(1.0, max(0.0, percentage)))), height: 3.5)
+                            .shadow(color: categoryColor.opacity(percentage > 0 ? 0.6 : 0), radius: 3)
                     }
                 }
-                .frame(height: 4)
+                .frame(height: 3.5)
+                .padding(.top, 2)
 
+                // Metric + Action Row
                 HStack(alignment: .lastTextBaseline) {
                     Text(count > 0 ? formattedSize : "0 B")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(count > 0 ? .primary : .secondary)
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundStyle(count > 0 ? Color.white : Color.white.opacity(0.3))
 
                     Spacer()
 
                     HStack(spacing: 3) {
-                        Text("View")
-                            .font(.system(size: 11, weight: .medium))
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 9, weight: .bold))
-                            .offset(x: isHovered ? 2 : 0)
+                        Text("Inspect")
+                            .font(.system(size: 10.5, weight: .medium))
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 8.5, weight: .bold))
                     }
-                    .foregroundStyle(isHovered ? categoryColor : .secondary)
-                    .opacity(count > 0 ? 1 : 0.4)
+                    .foregroundStyle(isHovered ? categoryColor : Color.white.opacity(0.4))
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(
+                        Capsule()
+                            .fill(isHovered ? categoryColor.opacity(0.15) : Color.white.opacity(0.04))
+                    )
                 }
             }
-            .padding(16)
-            .frame(minHeight: 140)
+            .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color(nsColor: .controlBackgroundColor).opacity(isHovered ? 0.85 : 0.45))
+                    .fill(Color(red: 0.08, green: 0.085, blue: 0.12).opacity(isHovered ? 0.95 : 0.75))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .stroke(
                         isSelected ? categoryColor :
-                        (isHovered ? categoryColor.opacity(0.35) : Color.primary.opacity(0.06)),
-                        lineWidth: isSelected ? 2 : 1
+                        (isHovered ? categoryColor.opacity(0.4) : Color.white.opacity(0.08)),
+                        lineWidth: isSelected ? 1.5 : 1
                     )
             )
-            .scaleEffect(isHovered ? 1.012 : 1.0)
-            .shadow(color: Color.black.opacity(isHovered ? 0.06 : 0.0), radius: 8, x: 0, y: 4)
-            .animation(.spring(response: 0.25, dampingFraction: 0.85), value: isHovered)
+            .overlay(
+                // Specular top highlight
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.20), Color.clear],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+                    .padding(0.5)
+            )
+            .offset(y: isHovered ? -3 : 0)
+            .scaleEffect(isHovered ? 1.015 : 1.0)
+            .shadow(
+                color: isHovered ? categoryColor.opacity(0.25) : Color.black.opacity(0.3),
+                radius: isHovered ? 12 : 6,
+                x: 0,
+                y: isHovered ? 6 : 2
+            )
+            .animation(.spring(response: 0.28, dampingFraction: 0.82), value: isHovered)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -136,15 +183,15 @@ public struct MetricCardView: View {
     private var categoryColor: Color {
         switch category {
         case .aiClutter:
-            return .purple
+            return Color(red: 0.75, green: 0.35, blue: 0.95)
         case .developerJunk:
-            return .blue
+            return Color(red: 0.25, green: 0.55, blue: 0.98)
         case .systemJunk:
-            return .teal
+            return Color(red: 0.15, green: 0.75, blue: 0.75)
         case .appLeftovers:
-            return .orange
+            return Color(red: 0.98, green: 0.55, blue: 0.15)
         case .trashBins:
-            return .red
+            return Color(red: 0.95, green: 0.28, blue: 0.32)
         }
     }
 }
