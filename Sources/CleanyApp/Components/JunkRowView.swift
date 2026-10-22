@@ -2,13 +2,14 @@ import SwiftUI
 import AppKit
 import CleanyCore
 
-/// Native Apple HIG List Row for individual junk files and folders.
-/// Uses semantic typography, hierarchical SF Symbols, and standard AppKit Finder integration.
+/// Native macOS 27 Liquid Glass List Row for junk files and directories.
+/// Encapsulated in an optical glass tile with checkbox, path inspection, and Finder actions.
 public struct JunkRowView: View {
     public let item: JunkItem
     public let onToggle: () -> Void
 
     @LocalVar private var isExpanded: Bool = false
+    @LocalVar private var isHovered: Bool = false
 
     public init(item: JunkItem, onToggle: @escaping () -> Void) {
         self.item = item
@@ -16,9 +17,9 @@ public struct JunkRowView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 10) {
-                // Checkbox
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 12) {
+                // Checkbox Toggle
                 Toggle("", isOn: Binding(
                     get: { item.isSelected },
                     set: { _ in onToggle() }
@@ -26,17 +27,22 @@ public struct JunkRowView: View {
                 .toggleStyle(.checkbox)
                 .labelsHidden()
 
-                // File or Folder Icon
-                Image(systemName: item.isDirectory ? "folder.fill" : "doc.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(item.isDirectory ? Color.accentColor : Color.secondary)
-                    .font(.system(size: 16))
-                    .frame(width: 20)
+                // File/Folder Glyphed Droplet
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(item.isDirectory ? Color.accentColor.opacity(0.18) : Color.primary.opacity(0.06))
+                        .frame(width: 30, height: 30)
 
-                // Item Name and Category Subtitle
+                    Image(systemName: item.isDirectory ? "folder.fill" : "doc.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(item.isDirectory ? Color.accentColor : Color.secondary)
+                        .font(.system(size: 14))
+                }
+
+                // File Name & Subtitle
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.displayName)
-                        .font(.body)
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
 
@@ -50,12 +56,15 @@ public struct JunkRowView: View {
 
                 // Formatted Size
                 Text(item.formattedSize)
-                    .font(.callout)
-                    .fontWeight(.medium)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundStyle(.primary)
                     .monospacedDigit()
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.primary.opacity(0.05))
+                    .clipShape(Capsule())
 
-                // Reveal in Finder Button
+                // Finder Reveal Action
                 Button {
                     SoundHaptics.tap()
                     NSWorkspace.shared.selectFile(item.path, inFileViewerRootedAtPath: "")
@@ -67,7 +76,7 @@ public struct JunkRowView: View {
                 .buttonStyle(.borderless)
                 .help("Mostra nel Finder")
 
-                // Info / Disclosure Toggle
+                // Disclosure Button
                 Button {
                     withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
                         isExpanded.toggle()
@@ -81,23 +90,28 @@ public struct JunkRowView: View {
                 .help("Dettagli percorso")
             }
 
-            // Expanded Path Information
+            // Expanded Explanation & Path Drawer
             if isExpanded {
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(item.path)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(3)
                         .textSelection(.enabled)
 
                     Text(item.explanation)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
-                .padding(.leading, 32)
-                .padding(.top, 2)
+                .padding(.leading, 42)
+                .padding(.top, 4)
             }
         }
-        .padding(.vertical, 3)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .liquidGlass(cornerRadius: 12, tint: Color.primary.opacity(isHovered ? 0.08 : 0.02), isInteractive: true)
+        .onHover { hovering in
+            isHovered = hovering
+        }
     }
 }

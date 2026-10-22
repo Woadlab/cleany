@@ -17,28 +17,40 @@ public struct CategoryChartData: Identifiable {
     }
 }
 
-/// Native macOS data visualization using Swift Charts.
-/// Implements a responsive Donut Chart (SectorMark) respecting Apple HIG,
-/// San Francisco typography, and dynamic system appearance.
+/// Native macOS 27 Hero Liquid Glass Storage Visualization Platter.
+/// Combines Swift Charts Donut Chart (`SectorMark`), dynamic glass lens core,
+/// and live telemetry ticker.
 public struct StorageChartView: View {
     public let data: [CategoryChartData]
     public let totalBytes: UInt64
     public let totalCount: Int
     public let isScanning: Bool
+    public let isCleaning: Bool
+    public let hasCompletedInitialScan: Bool
     public let currentScanningPath: String?
+    public let onPrimaryAction: () -> Void
+    public let onSecondaryAction: () -> Void
 
     public init(
         data: [CategoryChartData],
         totalBytes: UInt64,
         totalCount: Int,
         isScanning: Bool = false,
-        currentScanningPath: String? = nil
+        isCleaning: Bool = false,
+        hasCompletedInitialScan: Bool = false,
+        currentScanningPath: String? = nil,
+        onPrimaryAction: @escaping () -> Void = {},
+        onSecondaryAction: @escaping () -> Void = {}
     ) {
         self.data = data
         self.totalBytes = totalBytes
         self.totalCount = totalCount
         self.isScanning = isScanning
+        self.isCleaning = isCleaning
+        self.hasCompletedInitialScan = hasCompletedInitialScan
         self.currentScanningPath = currentScanningPath
+        self.onPrimaryAction = onPrimaryAction
+        self.onSecondaryAction = onSecondaryAction
     }
 
     private var nonZeroData: [CategoryChartData] {
@@ -50,22 +62,23 @@ public struct StorageChartView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 24) {
+            // Interactive Glass Donut Chart & Core
             ZStack {
                 if nonZeroData.isEmpty {
-                    // Empty or Initial state circular track
+                    // Empty / Clean circular glass track
                     Circle()
-                        .stroke(Color(nsColor: .separatorColor).opacity(0.35), lineWidth: 22)
-                        .frame(width: 220, height: 220)
+                        .stroke(Color.primary.opacity(0.08), lineWidth: 24)
+                        .frame(width: 240, height: 240)
                 } else {
-                    // Native Swift Charts Donut Chart
+                    // Swift Charts Donut Chart
                     Chart(nonZeroData) { item in
                         SectorMark(
                             angle: .value("Dimensione", Double(item.size)),
                             innerRadius: .ratio(0.72),
-                            angularInset: 1.5
+                            angularInset: 2.0
                         )
-                        .cornerRadius(3)
+                        .cornerRadius(4)
                         .foregroundStyle(by: .value("Categoria", item.category.title))
                     }
                     .chartLegend(.hidden)
@@ -76,69 +89,168 @@ public struct StorageChartView: View {
                         JunkCategory.appLeftovers.title: Color.orange,
                         JunkCategory.trashBins.title: Color.red
                     ])
-                    .frame(width: 230, height: 230)
+                    .frame(width: 250, height: 250)
                 }
 
-                // Center Information Display
+                // Center Glass Lens Core
                 VStack(spacing: 4) {
                     if isScanning {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .font(.system(size: 28, weight: .medium))
+                        Image(systemName: "sparkle.magnifyingglass")
+                            .font(.system(size: 32))
                             .foregroundStyle(Color.accentColor)
                             .symbolEffect(.pulse)
 
-                        Text("Scansione in corso")
-                            .font(.headline)
+                        Text("Scansione...")
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
                             .foregroundStyle(.primary)
 
-                        Text("Analisi file locali...")
+                        Text("Analisi disco locale")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else if isCleaning {
+                        Image(systemName: "trash.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundStyle(Color.red)
+                            .symbolEffect(.pulse)
+
+                        Text("Pulizia...")
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+
+                        Text("Spostamento nel Cestino")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     } else if totalBytes > 0 {
                         Text(formattedTotal)
-                            .font(.system(size: 28, weight: .semibold, design: .rounded))
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
                             .foregroundStyle(.primary)
 
                         Text("\(totalCount) elementi trovati")
-                            .font(.subheadline)
+                            .font(.callout)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                    } else if hasCompletedInitialScan {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 36))
+                            .foregroundStyle(Color.green)
+
+                        Text("Mac Ottimizzato")
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+
+                        Text("Zero file spazzatura")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     } else {
                         Image(systemName: "sparkles")
-                            .font(.system(size: 30, weight: .regular))
+                            .font(.system(size: 36))
                             .foregroundStyle(Color.accentColor)
 
-                        Text("Mac Ottimizzato")
-                            .font(.headline)
+                        Text("Pronto per la Scansione")
+                            .font(.system(size: 17, weight: .bold, design: .rounded))
                             .foregroundStyle(.primary)
 
-                        Text("Nessun elemento da pulire")
+                        Text("100% Locale e Privato")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
+                .frame(width: 170, height: 170)
+                .background(Circle().fill(.ultraThinMaterial.opacity(0.4)))
             }
 
-            // Real-Time Scanning Path Ticker
+            // Real-Time Scanning File Telemetry Pill
             if isScanning, let path = currentScanningPath, !path.isEmpty {
-                HStack(spacing: 6) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .controlSize(.small)
 
                     Text(path)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
+                        .frame(maxWidth: 420)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 4)
-                .background(Color(nsColor: .controlBackgroundColor))
-                .clipShape(Capsule())
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .liquidGlass(cornerRadius: 16, tint: Color.accentColor.opacity(0.12), isInteractive: false)
+            }
+
+            // Floating Liquid Glass Control Dock
+            HStack(spacing: 14) {
+                if isScanning || isCleaning {
+                    Button {
+                        // In progress
+                    } label: {
+                        HStack(spacing: 8) {
+                            ProgressView()
+                                .controlSize(.small)
+                            Text(isScanning ? "Scansione in corso..." : "Pulizia in corso...")
+                                .font(.system(size: 14, weight: .semibold))
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.glass)
+                    .disabled(true)
+                } else if hasCompletedInitialScan && totalBytes > 0 {
+                    // Primary Clean Button with native .buttonStyle(.glassProminent)
+                    Button {
+                        SoundHaptics.clean()
+                        onPrimaryAction()
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "trash.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                            Text("Sposta nel Cestino (\(formattedTotal))")
+                                .font(.system(size: 14.5, weight: .bold))
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(.red)
+
+                    // Secondary Rescan Button
+                    Button {
+                        SoundHaptics.tap()
+                        onSecondaryAction()
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 13, weight: .semibold))
+                            Text("Riscansiona")
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.glass)
+                } else {
+                    // Primary Scan Mac Button with native .buttonStyle(.glassProminent)
+                    Button {
+                        SoundHaptics.tap()
+                        onPrimaryAction()
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "sparkle.magnifyingglass")
+                                .font(.system(size: 15, weight: .bold))
+                            Text("Scansiona Mac")
+                                .font(.system(size: 15, weight: .bold))
+                        }
+                        .padding(.horizontal, 28)
+                        .padding(.vertical, 11)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(Color.accentColor)
+                }
             }
         }
-        .padding(.vertical, 12)
+        .padding(.horizontal, 32)
+        .padding(.vertical, 28)
+        .frame(maxWidth: .infinity)
+        .liquidGlass(cornerRadius: 24, tint: Color.accentColor.opacity(0.04), isInteractive: false)
     }
 }

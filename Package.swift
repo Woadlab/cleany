@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "Cleany",
     platforms: [
-        .macOS(.v14)
+        .macOS("27.0")
     ],
     products: [
         .library(

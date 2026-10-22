@@ -1,9 +1,9 @@
 import SwiftUI
 import CleanyCore
 
-/// Native Apple HIG macOS Sidebar using standard `List(selection:)` and `.listStyle(.sidebar)`.
-/// Provides automatic system vibrancy, traffic-light synchronization, keyboard navigation,
-/// and dynamic Light/Dark mode hierarchy.
+/// Native macOS 27 Liquid Glass Sidebar.
+/// Features optical glass selection capsules, hierarchical SF Symbols,
+/// section headers, and a dedicated privacy assurance footer platter.
 public struct SidebarView: View {
     @ObservedObject var state: AppState
 
@@ -12,104 +12,147 @@ public struct SidebarView: View {
     }
 
     public var body: some View {
-        List(selection: $state.selectedNav) {
-            // Hero Smart Care Section
-            Section {
-                NavigationLink(value: NavigationItem.smartCare) {
-                    Label {
-                        HStack {
-                            Text("Smart Care")
-                                .font(.body)
-                                .fontWeight(.medium)
+        VStack(spacing: 0) {
+            // App Branding Header
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.18))
+                        .frame(width: 30, height: 30)
+                        .overlay(Circle().stroke(Color.accentColor.opacity(0.4), lineWidth: 1))
 
-                            Spacer()
-
-                            if state.totalFoundBytes > 0 {
-                                Text(state.formattedTotalBytes)
-                                    .font(.callout)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    } icon: {
-                        Image(systemName: "sparkles")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(Color.accentColor)
-                    }
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(Color.accentColor)
                 }
-                .tag(NavigationItem.smartCare)
-            }
 
-            // Cleaning Categories Section
-            Section("Pulizia") {
-                ForEach(JunkCategory.allCases) { category in
-                    NavigationLink(value: NavigationItem.category(category)) {
+                Text("Cleany")
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Text("v1.0")
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.primary.opacity(0.06))
+                    .clipShape(Capsule())
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+
+            Divider()
+                .opacity(0.4)
+
+            // Navigation Items List
+            List(selection: $state.selectedNav) {
+                // Smart Care Hero
+                Section {
+                    NavigationLink(value: NavigationItem.smartCare) {
                         Label {
                             HStack {
-                                Text(category.title)
+                                Text("Smart Care")
                                     .font(.body)
+                                    .fontWeight(.medium)
 
                                 Spacer()
 
-                                let size = state.categorySize(category)
-                                if size > 0 {
-                                    Text(state.categoryFormattedSize(category))
+                                if state.totalFoundBytes > 0 {
+                                    Text(state.formattedTotalBytes)
                                         .font(.callout)
+                                        .fontWeight(.semibold)
                                         .foregroundStyle(.secondary)
                                 }
                             }
                         } icon: {
-                            Image(systemName: category.systemImage)
+                            Image(systemName: "sparkles")
                                 .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(colorForCategory(category))
+                                .foregroundStyle(Color.accentColor)
                         }
                     }
-                    .tag(NavigationItem.category(category))
+                    .tag(NavigationItem.smartCare)
                 }
-            }
 
-            // Utilities Section
-            Section("Utility") {
-                NavigationLink(value: NavigationItem.spaceLens) {
-                    Label {
-                        Text("Space Lens")
-                            .font(.body)
-                    } icon: {
-                        Image(systemName: "circle.grid.cross.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(Color.teal)
+                // Cleaning Categories
+                Section("Pulizia") {
+                    ForEach(JunkCategory.allCases) { category in
+                        NavigationLink(value: NavigationItem.category(category)) {
+                            Label {
+                                HStack {
+                                    Text(category.title)
+                                        .font(.body)
+
+                                    Spacer()
+
+                                    let size = state.categorySize(category)
+                                    if size > 0 {
+                                        Text(state.categoryFormattedSize(category))
+                                            .font(.callout)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            } icon: {
+                                Image(systemName: category.systemImage)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundStyle(colorForCategory(category))
+                            }
+                        }
+                        .tag(NavigationItem.category(category))
                     }
                 }
-                .tag(NavigationItem.spaceLens)
 
-                NavigationLink(value: NavigationItem.maintenance) {
-                    Label {
-                        Text("Manutenzione")
-                            .font(.body)
-                    } icon: {
-                        Image(systemName: "wrench.and.screwdriver.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(Color.blue)
+                // Utilities
+                Section("Utility") {
+                    NavigationLink(value: NavigationItem.spaceLens) {
+                        Label {
+                            Text("Space Lens")
+                                .font(.body)
+                        } icon: {
+                            Image(systemName: "circle.grid.cross.fill")
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(Color.teal)
+                        }
                     }
+                    .tag(NavigationItem.spaceLens)
+
+                    NavigationLink(value: NavigationItem.maintenance) {
+                        Label {
+                            Text("Manutenzione")
+                                .font(.body)
+                        } icon: {
+                            Image(systemName: "wrench.and.screwdriver.fill")
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(Color.blue)
+                        }
+                    }
+                    .tag(NavigationItem.maintenance)
                 }
-                .tag(NavigationItem.maintenance)
             }
-        }
-        .listStyle(.sidebar)
-        .safeAreaInset(edge: .bottom) {
-            // Subtle Native Privacy Footer
-            HStack(spacing: 8) {
-                Image(systemName: "lock.shield.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(Color.green)
-                    .font(.callout)
+            .listStyle(.sidebar)
+
+            // Liquid Glass Privacy Assurance Footer
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(Color.green.opacity(0.18))
+                        .frame(width: 26, height: 26)
+
+                    Image(systemName: "lock.shield.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(Color.green)
+                        .font(.caption)
+                }
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text("100% Locale e Privato")
                         .font(.caption)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
                         .foregroundStyle(.primary)
 
-                    Text("Zero telemetria • Offline")
+                    Text("Zero connessioni di rete")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -118,8 +161,8 @@ public struct SidebarView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
-            .background(Color(nsColor: .controlBackgroundColor).opacity(0.5))
-            .overlay(Divider(), alignment: .top)
+            .liquidGlass(cornerRadius: 12, tint: Color.green.opacity(0.06), isInteractive: false)
+            .padding(12)
         }
     }
 

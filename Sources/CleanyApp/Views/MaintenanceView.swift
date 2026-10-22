@@ -1,8 +1,9 @@
 import SwiftUI
 import CleanyCore
 
-/// Native Apple HIG Maintenance View.
-/// Form-based system maintenance routines with standard controls and SF Symbols.
+/// Native macOS 27 Maintenance View.
+/// Features Liquid Glass control platters for system maintenance routines
+/// executed 100% locally with zero background daemons.
 public struct MaintenanceView: View {
     @ObservedObject var state: AppState
 
@@ -11,64 +12,65 @@ public struct MaintenanceView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Header
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Manutenzione di Sistema")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.primary)
+        ZStack {
+            // macOS 27 Ambient Fluid Mesh Atmosphere
+            LiquidGlassBackground()
 
-                    Text("Routine native di ottimizzazione macOS eseguite al 100% in locale senza daemon o processi in background.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.top, 20)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // Header Platter
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Manutenzione di Sistema")
+                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
 
-                // Grouped Maintenance Tasks
-                VStack(spacing: 0) {
-                    ForEach(Array(MaintenanceTask.allCases.enumerated()), id: \.element.id) { index, task in
-                        taskRow(task: task)
+                        Text("Routine native di ottimizzazione macOS eseguite al 100% in locale con permessi standard e zero daemon.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .liquidGlass(cornerRadius: 18, tint: Color.accentColor.opacity(0.06), isInteractive: false)
+                    .padding(.top, 20)
 
-                        if index < MaintenanceTask.allCases.count - 1 {
-                            Divider()
-                                .padding(.leading, 54)
+                    // Tasks Grid
+                    VStack(spacing: 12) {
+                        ForEach(MaintenanceTask.allCases) { task in
+                            maintenanceCard(task: task)
                         }
                     }
                 }
-                .background(Color(nsColor: .controlBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .stroke(Color(nsColor: .separatorColor).opacity(0.4), lineWidth: 0.5)
-                )
+                .padding(.horizontal, 32)
+                .padding(.bottom, 40)
+                .frame(maxWidth: 860)
             }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 28)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor))
     }
 
     @ViewBuilder
-    private func taskRow(task: MaintenanceTask) -> some View {
+    private func maintenanceCard(task: MaintenanceTask) -> some View {
         let isRunning = state.runningTasks.contains(task)
         let result = state.maintenanceResults[task]
 
-        HStack(spacing: 14) {
-            // Task Icon
-            Image(systemName: task.systemImage)
-                .font(.system(size: 20))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(Color.accentColor)
-                .frame(width: 32, height: 32)
+        HStack(spacing: 16) {
+            // Task Icon in a Glass Droplet
+            ZStack {
+                Circle()
+                    .fill(Color.accentColor.opacity(0.18))
+                    .frame(width: 44, height: 44)
+                    .overlay(Circle().stroke(Color.accentColor.opacity(0.35), lineWidth: 1))
+
+                Image(systemName: task.systemImage)
+                    .font(.system(size: 19, weight: .semibold))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(Color.accentColor)
+            }
 
             // Description
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
-                    .font(.body)
-                    .fontWeight(.medium)
+                    .font(.headline)
+                    .fontWeight(.semibold)
                     .foregroundStyle(.primary)
 
                 Text(task.taskDescription)
@@ -84,6 +86,7 @@ public struct MaintenanceView: View {
                         Text(res.message)
                             .foregroundStyle(res.success ? Color.green : Color.orange)
                             .font(.caption2)
+                            .fontWeight(.medium)
                     }
                     .padding(.top, 2)
                 }
@@ -91,7 +94,7 @@ public struct MaintenanceView: View {
 
             Spacer()
 
-            // Run Button
+            // Run Button with native macOS 27 glass button style
             if isRunning {
                 HStack(spacing: 6) {
                     ProgressView()
@@ -100,17 +103,27 @@ public struct MaintenanceView: View {
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .liquidGlass(cornerRadius: 12, tint: Color.primary.opacity(0.04), isInteractive: false)
             } else {
-                Button("Esegui") {
+                Button {
                     SoundHaptics.tap()
                     state.runMaintenanceTask(task)
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 10))
+                        Text("Esegui")
+                            .font(.system(size: 13, weight: .bold))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 7)
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.regular)
+                .buttonStyle(.glassProminent)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(16)
+        .liquidGlass(cornerRadius: 16, tint: Color.primary.opacity(0.04), isInteractive: true)
     }
 }
