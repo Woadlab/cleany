@@ -13,30 +13,30 @@ public enum MaintenanceTask: String, CaseIterable, Identifiable, Sendable, Codab
     public var title: String {
         switch self {
         case .flushDNS:
-            return "Flush DNS Cache"
+            return "Svuota Cache DNS"
         case .purgeRAM:
-            return "Free Inactive Memory"
+            return "Libera Memoria RAM"
         case .thinTimeMachine:
-            return "Thin Time Machine Snapshots"
+            return "Ottimizza Snapshot Time Machine"
         case .reindexSpotlight:
-            return "Reindex Spotlight"
+            return "Reindicizza Spotlight"
         case .speedUpMail:
-            return "Speed Up Mail Database"
+            return "Compatta Database Mail"
         }
     }
 
     public var taskDescription: String {
         switch self {
         case .flushDNS:
-            return "Clears local domain resolution caches by notifying mDNSResponder."
+            return "Cancella la cache di risoluzione domini inviando una notifica a mDNSResponder."
         case .purgeRAM:
-            return "Forces macOS to compress or discard inactive disk-backed cache pages."
+            return "Forza macOS a liberare e comprimere le pagine di cache inattive in memoria."
         case .thinTimeMachine:
-            return "Removes unneeded local APFS backup snapshots to reclaim purgeable disk space."
+            return "Rimuove gli snapshot locali APFS obsoleti per liberare spazio su disco."
         case .reindexSpotlight:
-            return "Forces macOS metadata daemon (mdimport) to re-index system files for faster search."
+            return "Forza il demone dei metadati a re-indicizzare i file per ricerche istantanee."
         case .speedUpMail:
-            return "Compacts and vacuums SQLite envelope index databases used by Apple Mail."
+            return "Compatta e deframmenta i database SQLite degli indici di Apple Mail."
         }
     }
 

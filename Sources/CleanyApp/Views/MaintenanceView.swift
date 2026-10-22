@@ -121,9 +121,10 @@ public struct MaintenanceView: View {
                     .padding(.vertical, 7)
                 }
                 .buttonStyle(.glassProminent)
+                .clipShape(Capsule())
             }
         }
-        .padding(16)
-        .liquidGlass(cornerRadius: 16, tint: Color.primary.opacity(0.04), isInteractive: true)
+        .padding(18)
+        .liquidGlass(cornerRadius: 20, tint: Color.primary.opacity(0.04), isInteractive: true)
     }
 }

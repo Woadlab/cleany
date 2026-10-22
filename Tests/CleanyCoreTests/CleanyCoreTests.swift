@@ -7,9 +7,9 @@ struct CleanyCoreTests {
 
     @Test("Category metadata attributes")
     func categoryAttributes() {
-        #expect(JunkCategory.aiClutter.title == "AI Clutter")
-        #expect(JunkCategory.aiClutter.badge == "New")
-        #expect(JunkCategory.developerJunk.title == "Developer Junk")
+        #expect(JunkCategory.aiClutter.title == "Cache & Modelli AI")
+        #expect(JunkCategory.aiClutter.badge == "AI")
+        #expect(JunkCategory.developerJunk.title == "Residui Sviluppo")
         #expect(JunkCategory.allCases.count == 5)
     }
 

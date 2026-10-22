@@ -24,28 +24,6 @@ struct CleanyApp: App {
             }
             .frame(minWidth: 960, minHeight: 660)
             .navigationTitle("Cleany")
-            .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                    if state.totalFoundBytes > 0 && !state.isScanning && !state.isCleaning {
-                        Button {
-                            SoundHaptics.clean()
-                            state.cleanSelected()
-                        } label: {
-                            Label("Sposta nel Cestino", systemImage: "trash")
-                        }
-                        .help("Sposta gli elementi selezionati nel Cestino (⌘⌫)")
-                    }
-
-                    Button {
-                        SoundHaptics.tap()
-                        state.startScanAll()
-                    } label: {
-                        Label(state.isScanning ? "Scansione..." : "Scansiona", systemImage: "arrow.clockwise")
-                    }
-                    .disabled(state.isScanning || state.isCleaning)
-                    .help("Scansiona Mac (⌘R)")
-                }
-            }
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)

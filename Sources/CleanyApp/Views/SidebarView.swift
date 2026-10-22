@@ -132,37 +132,6 @@ public struct SidebarView: View {
                 }
             }
             .listStyle(.sidebar)
-
-            // Liquid Glass Privacy Assurance Footer
-            HStack(spacing: 10) {
-                ZStack {
-                    Circle()
-                        .fill(Color.green.opacity(0.18))
-                        .frame(width: 26, height: 26)
-
-                    Image(systemName: "lock.shield.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(Color.green)
-                        .font(.caption)
-                }
-
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("100% Locale e Privato")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.primary)
-
-                    Text("Zero connessioni di rete")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .liquidGlass(cornerRadius: 12, tint: Color.green.opacity(0.06), isInteractive: false)
-            .padding(12)
         }
     }
 

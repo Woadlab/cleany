@@ -2,8 +2,8 @@ import SwiftUI
 import CleanyCore
 
 /// Native macOS 27 Liquid Glass Category Platter.
-/// Features optical glass refraction, dynamic fluid progress bar,
-/// San Francisco typography, and spring interaction physics.
+/// Ultra-soft continuous curvature (22pt), fluid progress bar,
+/// San Francisco typography without awkward word-wraps, and responsive hover physics.
 public struct LiquidCategoryCardView: View {
     public let category: JunkCategory
     public let count: Int
@@ -45,17 +45,16 @@ public struct LiquidCategoryCardView: View {
 
     public var body: some View {
         Button {
-            SoundHaptics.tap()
             onSelect()
         } label: {
             VStack(alignment: .leading, spacing: 14) {
                 // Top Header Row
-                HStack(alignment: .center, spacing: 10) {
-                    // Glass Droplet Icon Container
+                HStack(alignment: .center, spacing: 12) {
+                    // Soft Glass Droplet Icon Container
                     ZStack {
                         Circle()
                             .fill(categoryColor.opacity(0.18))
-                            .frame(width: 38, height: 38)
+                            .frame(width: 40, height: 40)
                             .overlay(Circle().stroke(categoryColor.opacity(0.35), lineWidth: 1))
 
                         Image(systemName: category.systemImage)
@@ -64,17 +63,17 @@ public struct LiquidCategoryCardView: View {
                             .foregroundStyle(categoryColor)
                     }
 
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
                         HStack(spacing: 6) {
                             Text(category.title)
-                                .font(.headline)
-                                .fontWeight(.semibold)
+                                .font(.system(size: 15, weight: .semibold, design: .rounded))
                                 .foregroundStyle(.primary)
+                                .lineLimit(1)
 
                             if let badge = category.badge {
                                 Text(badge)
                                     .font(.system(size: 10, weight: .bold))
-                                    .padding(.horizontal, 6)
+                                    .padding(.horizontal, 7)
                                     .padding(.vertical, 2)
                                     .background(categoryColor.opacity(0.18))
                                     .foregroundStyle(categoryColor)
@@ -88,42 +87,44 @@ public struct LiquidCategoryCardView: View {
                             .lineLimit(1)
                     }
 
-                    Spacer()
+                    Spacer(minLength: 4)
 
-                    // Trailing Hover Chevron
-                    Image(systemName: "arrow.up.forward.circle.fill")
-                        .font(.system(size: 16))
-                        .foregroundStyle(isHovered ? categoryColor : Color.secondary.opacity(0.4))
-                        .offset(x: isHovered ? 2 : 0, y: isHovered ? -2 : 0)
+                    // Soft Glass Hover Arrow Pill
+                    Image(systemName: "arrow.up.forward")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(isHovered ? .white : categoryColor)
+                        .frame(width: 26, height: 26)
+                        .background(
+                            Circle()
+                                .fill(isHovered ? categoryColor : categoryColor.opacity(0.15))
+                        )
                 }
 
                 // Middle: Fluid Progress Bar
-                VStack(alignment: .leading, spacing: 4) {
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Color.primary.opacity(0.06))
-                                .frame(height: 6)
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.primary.opacity(0.06))
+                            .frame(height: 6)
 
-                            Capsule()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [categoryColor, categoryColor.opacity(0.75)],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [categoryColor, categoryColor.opacity(0.75)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
                                 )
-                                .frame(width: max(6, geo.size.width * CGFloat(min(1.0, max(0.05, percentage)))), height: 6)
-                                .shadow(color: categoryColor.opacity(0.3), radius: 3, x: 0, y: 1)
-                        }
+                            )
+                            .frame(width: max(6, geo.size.width * CGFloat(min(1.0, max(0.04, percentage)))), height: 6)
+                            .shadow(color: categoryColor.opacity(0.35), radius: 3, x: 0, y: 1)
                     }
-                    .frame(height: 6)
                 }
+                .frame(height: 6)
 
                 // Bottom Metrics Row
                 HStack(alignment: .lastTextBaseline) {
                     Text(size > 0 ? formattedSize : "0 B")
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(.system(size: 21, weight: .bold, design: .rounded))
                         .foregroundStyle(.primary)
 
                     Spacer()
@@ -133,22 +134,24 @@ public struct LiquidCategoryCardView: View {
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundStyle(.secondary)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.primary.opacity(0.05))
-                            .clipShape(Capsule())
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(Color.primary.opacity(0.06)))
                     } else {
                         Text("Pulito")
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundStyle(.secondary)
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(Color.primary.opacity(0.04)))
                     }
                 }
             }
             .padding(18)
-            .liquidGlass(cornerRadius: 18, tint: categoryColor.opacity(isHovered ? 0.20 : 0.08), isInteractive: true)
-            .scaleEffect(isHovered ? 1.015 : 1.0)
-            .offset(y: isHovered ? -3 : 0)
+            .liquidGlass(cornerRadius: 22, tint: categoryColor.opacity(isHovered ? 0.18 : 0.07), isInteractive: true)
+            .scaleEffect(isHovered ? 1.012 : 1.0)
+            .offset(y: isHovered ? -2 : 0)
             .animation(.spring(response: 0.28, dampingFraction: 0.78), value: isHovered)
         }
         .buttonStyle(.plain)

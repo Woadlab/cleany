@@ -2,8 +2,8 @@ import SwiftUI
 import CleanyCore
 
 /// Native macOS 27 Dashboard View.
-/// Redesigned from scratch with Liquid Glass platters, MeshGradient fluid atmosphere,
-/// Swift Charts donut visualization, and native .buttonStyle(.glassProminent) controls.
+/// Features a spacious, breathing 2-column Liquid Glass Bento Grid,
+/// San Francisco Rounded typography without hyphenations, and single-source actions.
 public struct DashboardView: View {
     @ObservedObject var state: AppState
 
@@ -74,7 +74,7 @@ public struct DashboardView: View {
                         }
                     )
 
-                    // Bento Grid of Liquid Glass Category Cards (3 top + 2 bottom)
+                    // Bento Grid of Liquid Glass Category Platters (Spacious 2-Column Grid)
                     VStack(spacing: 16) {
                         HStack {
                             Text("Aree di Pulizia")
@@ -84,21 +84,22 @@ public struct DashboardView: View {
 
                             Spacer()
 
-                            Text("Clicca su una categoria per i dettagli")
+                            Text("Clicca su una sezione per gestirne i file")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                         .padding(.horizontal, 4)
 
-                        // Top Row: AI Clutter, Developer Junk, System Junk
-                        HStack(spacing: 16) {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(), spacing: 18),
+                                GridItem(.flexible(), spacing: 18)
+                            ],
+                            spacing: 18
+                        ) {
                             categoryCard(category: .aiClutter)
                             categoryCard(category: .developerJunk)
                             categoryCard(category: .systemJunk)
-                        }
-
-                        // Bottom Row: App Leftovers, Trash Bins
-                        HStack(spacing: 16) {
                             categoryCard(category: .appLeftovers)
                             categoryCard(category: .trashBins)
                         }

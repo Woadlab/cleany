@@ -13,30 +13,30 @@ public enum JunkCategory: String, CaseIterable, Identifiable, Sendable, Codable 
     public var title: String {
         switch self {
         case .aiClutter:
-            return "AI Clutter"
+            return "Cache & Modelli AI"
         case .developerJunk:
-            return "Developer Junk"
+            return "Residui Sviluppo"
         case .systemJunk:
-            return "System Junk"
+            return "File di Sistema"
         case .appLeftovers:
-            return "App Leftovers"
+            return "Residui Applicazioni"
         case .trashBins:
-            return "Trash Bins"
+            return "Cestino"
         }
     }
 
     public var subtitle: String {
         switch self {
         case .aiClutter:
-            return "Caches, logs, and model weights from Claude, Cursor, Ollama & LM Studio"
+            return "Cache, log e snapshot da Cursor, Claude, Ollama e LM Studio"
         case .developerJunk:
-            return "Xcode DerivedData, simulators, and package manager caches"
+            return "Xcode DerivedData, simulatori e cache dei package manager"
         case .systemJunk:
-            return "User caches, system logs, crash reports, and universal binaries"
+            return "Cache utente, registri di sistema e log di crash"
         case .appLeftovers:
-            return "Orphaned preferences and containers from uninstalled applications"
+            return "Cartelle orfane e file residui di app già disinstallate"
         case .trashBins:
-            return "Files currently in local and external drive Trash bins"
+            return "Elementi e file accumulati nel Cestino di macOS"
         }
     }
 
@@ -58,8 +58,14 @@ public enum JunkCategory: String, CaseIterable, Identifiable, Sendable, Codable 
     public var badge: String? {
         switch self {
         case .aiClutter:
-            return "New"
-        default:
+            return "AI"
+        case .developerJunk:
+            return "Dev"
+        case .systemJunk:
+            return "macOS"
+        case .appLeftovers:
+            return "App"
+        case .trashBins:
             return nil
         }
     }

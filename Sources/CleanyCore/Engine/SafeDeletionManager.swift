@@ -2,7 +2,7 @@ import Foundation
 import AppKit
 
 /// Coordinates safe file removal. Defaults to moving items to macOS Trash for undoability.
-/// When cleaning items that are already in the Trash, purges them permanently.
+/// When cleaning items that are already in the Trash, executes native Finder empty trash routines.
 public enum SafeDeletionManager {
 
     public enum DeletionMode: Sendable {
@@ -20,9 +20,28 @@ public enum SafeDeletionManager {
         var itemsRemovedCount = 0
         var errors: [String] = []
 
+        var hasEmptiedTrashViaFinder = false
+
         for item in items where item.isSelected {
+            if item.category == .trashBins {
+                if !hasEmptiedTrashViaFinder {
+                    let script = """
+                    tell application "Finder"
+                        try
+                            empty trash
+                        end try
+                    end tell
+                    """
+                    _ = NSAppleScript(source: script)?.executeAndReturnError(nil)
+                    hasEmptiedTrashViaFinder = true
+                }
+                totalBytesReclaimed += item.size
+                itemsRemovedCount += 1
+                continue
+            }
+
             guard FileUtilities.isSafeToDelete(url: item.url) else {
-                errors.append("Skipped protected system location: \(item.path)")
+                errors.append("Percorso protetto di sistema saltato: \(item.path)")
                 continue
             }
 
@@ -30,13 +49,10 @@ public enum SafeDeletionManager {
                 continue
             }
 
-            let isAlreadyInTrash = item.category == .trashBins ||
-                item.path.contains("/.Trash/") ||
-                item.path.hasSuffix("/.Trash")
+            let isAlreadyInTrash = item.path.contains("/.Trash/") || item.path.hasSuffix("/.Trash")
 
             do {
                 if isAlreadyInTrash || mode == .permanentDelete {
-                    // Try direct removeItem first; fallback to Finder AppleScript if TCC blocks direct rm
                     do {
                         try fileManager.removeItem(at: item.url)
                     } catch {
@@ -57,7 +73,7 @@ public enum SafeDeletionManager {
                 totalBytesReclaimed += item.size
                 itemsRemovedCount += 1
             } catch {
-                errors.append("Failed to remove \(item.displayName): \(error.localizedDescription)")
+                errors.append("Impossibile rimuovere \(item.displayName): \(error.localizedDescription)")
             }
         }
 

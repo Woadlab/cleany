@@ -194,6 +194,7 @@ public struct StorageChartView: View {
                         .padding(.vertical, 10)
                     }
                     .buttonStyle(.glass)
+                    .clipShape(Capsule())
                     .disabled(true)
                 } else if hasCompletedInitialScan && totalBytes > 0 {
                     // Primary Clean Button with native .buttonStyle(.glassProminent)
@@ -212,10 +213,10 @@ public struct StorageChartView: View {
                     }
                     .buttonStyle(.glassProminent)
                     .tint(.red)
+                    .clipShape(Capsule())
 
                     // Secondary Rescan Button
                     Button {
-                        SoundHaptics.tap()
                         onSecondaryAction()
                     } label: {
                         HStack(spacing: 6) {
@@ -228,10 +229,10 @@ public struct StorageChartView: View {
                         .padding(.vertical, 10)
                     }
                     .buttonStyle(.glass)
+                    .clipShape(Capsule())
                 } else {
                     // Primary Scan Mac Button with native .buttonStyle(.glassProminent)
                     Button {
-                        SoundHaptics.tap()
                         onPrimaryAction()
                     } label: {
                         HStack(spacing: 8) {
@@ -245,12 +246,13 @@ public struct StorageChartView: View {
                     }
                     .buttonStyle(.glassProminent)
                     .tint(Color.accentColor)
+                    .clipShape(Capsule())
                 }
             }
         }
         .padding(.horizontal, 32)
         .padding(.vertical, 28)
         .frame(maxWidth: .infinity)
-        .liquidGlass(cornerRadius: 24, tint: Color.accentColor.opacity(0.04), isInteractive: false)
+        .liquidGlass(cornerRadius: 26, tint: Color.accentColor.opacity(0.04), isInteractive: false)
     }
 }

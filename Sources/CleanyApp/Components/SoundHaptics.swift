@@ -1,18 +1,16 @@
 import AppKit
 
-/// Multimodal feedback combining macOS trackpad haptics and native system sound cues.
+/// Calibrated subtle audio feedback for major actions, without intrusive trackpad thump on simple taps.
 public enum SoundHaptics {
     public static func tap() {
-        NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .default)
+        // No-op for standard taps: allows natural trackpad actuation without artificial double-thumping
     }
 
     public static func scanComplete() {
-        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .default)
         NSSound(named: "Purr")?.play()
     }
 
     public static func cleanSuccess() {
-        NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .default)
         NSSound(named: "Blow")?.play()
     }
 
