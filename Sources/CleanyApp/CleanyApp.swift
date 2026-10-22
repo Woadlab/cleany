@@ -6,7 +6,7 @@ struct CleanyApp: App {
     @StateObject private var state = AppState()
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Cleany", id: "main") {
             NavigationSplitView {
                 SidebarView(state: state)
                     .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 280)
@@ -46,5 +46,13 @@ struct CleanyApp: App {
                 .disabled(state.totalFoundBytes == 0 || state.isCleaning)
             }
         }
+
+        // Native macOS 27 Menu Bar Extra Companion
+        MenuBarExtra {
+            MenuBarView(state: state)
+        } label: {
+            Image(systemName: "sparkles")
+        }
+        .menuBarExtraStyle(.window)
     }
 }
