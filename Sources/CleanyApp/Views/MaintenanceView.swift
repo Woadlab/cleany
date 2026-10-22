@@ -43,8 +43,11 @@ public struct MaintenanceView: View {
                 .padding(.horizontal, 32)
                 .padding(.bottom, 40)
                 .frame(maxWidth: 860)
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder

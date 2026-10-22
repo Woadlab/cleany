@@ -108,8 +108,11 @@ public struct DashboardView: View {
                 .padding(.horizontal, 36)
                 .padding(.bottom, 40)
                 .frame(maxWidth: 960)
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder

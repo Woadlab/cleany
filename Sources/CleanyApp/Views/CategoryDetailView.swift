@@ -118,7 +118,9 @@ public struct CategoryDetailView: View {
                     standardCategoryContent
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // Dedicated Clean Experience for Trash Bins

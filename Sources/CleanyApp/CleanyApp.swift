@@ -11,16 +11,19 @@ struct CleanyApp: App {
                 SidebarView(state: state)
                     .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 280)
             } detail: {
-                switch state.selectedNav {
-                case .smartCare:
-                    DashboardView(state: state)
-                case .category(let category):
-                    CategoryDetailView(category: category, state: state)
-                case .maintenance:
-                    MaintenanceView(state: state)
-                case .spaceLens:
-                    SpaceLensView(state: state)
+                Group {
+                    switch state.selectedNav {
+                    case .smartCare:
+                        DashboardView(state: state)
+                    case .category(let category):
+                        CategoryDetailView(category: category, state: state)
+                    case .maintenance:
+                        MaintenanceView(state: state)
+                    case .spaceLens:
+                        SpaceLensView(state: state)
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(minWidth: 960, minHeight: 660)
             .navigationTitle("Cleany")

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Modern macOS 27 ambient fluid background utilizing native `MeshGradient`.
 /// Provides ethereal, luminous fluid color fields that shine through Liquid Glass layers
-/// and adapt dynamically to Dark and Light appearances.
+/// and adapt dynamically to Dark and Light appearances across the entire window frame.
 public struct LiquidGlassBackground: View {
     @Environment(\.colorScheme) private var colorScheme
     @LocalVar private var isBreathing: Bool = false
@@ -16,9 +16,10 @@ public struct LiquidGlassBackground: View {
                 ? Color(red: 0.06, green: 0.07, blue: 0.11)
                 : Color(red: 0.94, green: 0.95, blue: 0.98)
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
 
-            // Native macOS 27 MeshGradient Fluid Field
+            // Native macOS 27 MeshGradient Fluid Field (Fully Expanded)
             MeshGradient(
                 width: 3,
                 height: 3,
@@ -29,15 +30,13 @@ public struct LiquidGlassBackground: View {
                 ]),
                 colors: .colors(colorScheme == .dark ? darkMeshColors : lightMeshColors)
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .blur(radius: 60)
             .ignoresSafeArea()
             .opacity(colorScheme == .dark ? 0.55 : 0.40)
-
-            // Ultra-subtle optical noise / glass diffusion
-            Rectangle()
-                .fill(.ultraThinMaterial.opacity(0.25))
-                .ignoresSafeArea()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
         .onAppear {
             withAnimation(.easeInOut(duration: 9.0).repeatForever(autoreverses: true)) {
                 isBreathing = true

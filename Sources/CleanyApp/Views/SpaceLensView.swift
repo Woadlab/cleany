@@ -250,7 +250,9 @@ public struct SpaceLensView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func spaceFolderTile(node: SpaceNode, totalSize: UInt64, color: Color) -> some View {
