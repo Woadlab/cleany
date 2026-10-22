@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "Cleany",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v14)
     ],
     products: [
         .library(
@@ -43,7 +43,13 @@ let package = Package(
         .testTarget(
             name: "CleanyCoreTests",
             dependencies: ["CleanyCore"],
-            path: "Tests/CleanyCoreTests"
+            path: "Tests/CleanyCoreTests",
+            swiftSettings: [
+                .unsafeFlags([
+                    "-load-plugin-library",
+                    "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing/libTestingMacros.dylib"
+                ])
+            ]
         )
     ]
 )

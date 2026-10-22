@@ -13,6 +13,7 @@ public enum NavigationItem: Hashable, Sendable {
 public final class AppState: ObservableObject {
     @Published public var selectedNav: NavigationItem = .smartCare
 
+    @Published public var hasCompletedInitialScan: Bool = false
     @Published public var isScanning: Bool = false
     @Published public var scanProgress: ScanProgress? = nil
 
@@ -67,6 +68,7 @@ public final class AppState: ObservableObject {
             }
 
             self.itemsByCategory = results
+            self.hasCompletedInitialScan = true
             self.isScanning = false
             self.scanProgress = nil
         }

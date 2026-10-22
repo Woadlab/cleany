@@ -10,25 +10,24 @@ public struct MaintenanceView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("System Maintenance")
-                        .font(.title2)
-                        .fontWeight(.bold)
+                        .font(.system(size: 20, weight: .bold))
 
-                    Text("Native macOS maintenance routines executed 100% locally with zero external daemons.")
-                        .font(.subheadline)
+                    Text("Native macOS maintenance routines executed locally without background services.")
+                        .font(.system(size: 13))
                         .foregroundStyle(.secondary)
                 }
-                .padding(.top, 8)
+                .padding(.top, 12)
 
-                VStack(spacing: 14) {
+                VStack(spacing: 12) {
                     ForEach(MaintenanceTask.allCases) { task in
                         maintenanceCard(task: task)
                     }
                 }
             }
-            .padding(28)
+            .padding(24)
         }
     }
 
@@ -40,20 +39,20 @@ public struct MaintenanceView: View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(Color.blue.opacity(0.12))
-                    .frame(width: 44, height: 44)
+                    .fill(Color.blue.opacity(0.10))
+                    .frame(width: 40, height: 40)
 
                 Image(systemName: task.systemImage)
-                    .font(.system(size: 20))
+                    .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(.blue)
             }
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
-                    .font(.headline)
+                    .font(.system(size: 14, weight: .semibold))
 
                 Text(task.taskDescription)
-                    .font(.caption)
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
 
                 if let res = result {
@@ -62,7 +61,8 @@ public struct MaintenanceView: View {
                             .foregroundStyle(res.success ? .green : .orange)
                         Text(res.message)
                     }
-                    .font(.caption2)
+                    .font(.system(size: 11))
+                    .foregroundStyle(res.success ? .green : .orange)
                     .padding(.top, 2)
                 }
             }
@@ -75,20 +75,20 @@ public struct MaintenanceView: View {
                 if isRunning {
                     ProgressView()
                         .controlSize(.small)
-                        .frame(width: 60)
+                        .frame(width: 64, height: 24)
                 } else {
                     Text("Run")
-                        .fontWeight(.medium)
-                        .frame(width: 60)
+                        .font(.system(size: 12, weight: .medium))
+                        .frame(width: 64, height: 24)
                 }
             }
             .buttonStyle(.bordered)
             .disabled(isRunning)
         }
-        .padding(16)
+        .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.6))
+                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)

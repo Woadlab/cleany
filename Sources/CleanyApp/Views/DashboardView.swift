@@ -10,48 +10,66 @@ public struct DashboardView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(spacing: 28) {
+            VStack(spacing: 24) {
                 // Header
                 VStack(spacing: 6) {
                     Text("Smart Care")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.system(size: 26, weight: .bold))
 
-                    Text("Scan and safely optimize your Mac in one click.")
-                        .font(.subheadline)
+                    Text(headerSubtitle)
+                        .font(.system(size: 13))
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
-                .padding(.top, 16)
+                .padding(.top, 20)
 
                 // Central Gauge
                 ScanningGaugeView(
                     isScanning: state.isScanning,
+                    hasScanned: state.hasCompletedInitialScan,
                     formattedSize: state.formattedTotalBytes,
-                    itemCount: state.totalFoundCount
+                    itemCount: state.totalFoundCount,
+                    currentPath: state.scanProgress?.currentPath
                 )
 
                 // Action controls
-                HStack(spacing: 16) {
-                    Button {
-                        state.startScanAll()
-                    } label: {
-                        Label(state.isScanning ? "Scanning..." : "Scan Mac", systemImage: "arrow.clockwise")
-                            .font(.headline)
-                            .frame(minWidth: 140, minHeight: 38)
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(state.isScanning || state.isCleaning)
-
-                    if state.totalFoundBytes > 0 {
+                HStack(spacing: 14) {
+                    if !state.hasCompletedInitialScan && !state.isScanning {
                         Button {
-                            state.cleanSelected()
+                            state.startScanAll()
                         } label: {
-                            Label(state.isCleaning ? "Cleaning..." : "Clean to Trash", systemImage: "trash.fill")
-                                .font(.headline)
-                                .frame(minWidth: 150, minHeight: 38)
+                            Label("Scan Mac", systemImage: "sparkle.magnifyingglass")
+                                .font(.system(size: 14, weight: .semibold))
+                                .frame(minWidth: 160, minHeight: 40)
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.blue)
+                    } else {
+                        Button {
+                            state.startScanAll()
+                        } label: {
+                            Label(state.isScanning ? "Scanning..." : "Rescan", systemImage: "arrow.clockwise")
+                                .font(.system(size: 13, weight: .medium))
+                                .frame(minWidth: 120, minHeight: 36)
+                        }
+                        .buttonStyle(.bordered)
                         .disabled(state.isScanning || state.isCleaning)
+
+                        if state.totalFoundBytes > 0 {
+                            Button {
+                                state.cleanSelected()
+                            } label: {
+                                Label(
+                                    state.isCleaning ? "Cleaning..." : "Clean to Trash",
+                                    systemImage: "trash.fill"
+                                )
+                                .font(.system(size: 13, weight: .semibold))
+                                .frame(minWidth: 160, minHeight: 36)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.blue)
+                            .disabled(state.isScanning || state.isCleaning)
+                        }
                     }
                 }
 
@@ -59,26 +77,30 @@ public struct DashboardView: View {
                 if let result = state.lastCleanResult {
                     HStack(spacing: 12) {
                         Image(systemName: "checkmark.seal.fill")
-                            .font(.title2)
+                            .font(.system(size: 24))
                             .foregroundStyle(.green)
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Reclaimed \(result.formattedBytes)")
-                                .font(.headline)
-                            Text("Successfully moved \(result.itemsRemovedCount) items to Trash.")
-                                .font(.caption)
+                                .font(.system(size: 14, weight: .semibold))
+                            Text("Successfully moved \(result.itemsRemovedCount) items to Trash. Press ⌘Z in Trash to restore if needed.")
+                                .font(.system(size: 12))
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                     }
                     .padding(14)
-                    .background(Color.green.opacity(0.12))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(Color.green.opacity(0.10))
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(Color.green.opacity(0.2), lineWidth: 1)
+                    )
                     .padding(.horizontal, 32)
                 }
 
                 // Category Cards Grid
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 180, maximum: 240), spacing: 16)], spacing: 16) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 180, maximum: 230), spacing: 16)], spacing: 16) {
                     ForEach(JunkCategory.allCases) { category in
                         let items = state.itemsByCategory[category] ?? []
                         MetricCardView(
@@ -93,8 +115,32 @@ public struct DashboardView: View {
                     }
                 }
                 .padding(.horizontal, 32)
-                .padding(.bottom, 32)
+
+                // Privacy Trust Bar
+                HStack(spacing: 24) {
+                    Label("100% Local Execution", systemImage: "shield.lefthalf.filled")
+                    Label("Undoable macOS Trash", systemImage: "arrow.uturn.backward.circle")
+                    Label("Zero Daemons / Zero Tracking", systemImage: "lock.circle")
+                }
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.secondary.opacity(0.8))
+                .padding(.vertical, 8)
+                .padding(.bottom, 24)
             }
+        }
+    }
+
+    private var headerSubtitle: String {
+        if state.isScanning {
+            return "Scanning system directories and AI tool storage..."
+        } else if state.hasCompletedInitialScan {
+            if state.totalFoundBytes > 0 {
+                return "Found \(state.formattedTotalBytes) across \(state.totalFoundCount) safe-to-remove items."
+            } else {
+                return "Your Mac is clean and running at peak condition."
+            }
+        } else {
+            return "Scan your Mac locally for AI clutter, developer caches, and leftovers."
         }
     }
 }

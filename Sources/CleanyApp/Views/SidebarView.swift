@@ -14,7 +14,7 @@ public struct SidebarView: View {
                 NavigationLink(value: NavigationItem.smartCare) {
                     Label {
                         Text("Smart Care")
-                            .font(.body)
+                            .font(.system(size: 13, weight: .medium))
                     } icon: {
                         Image(systemName: "sparkles")
                             .foregroundStyle(.blue)
@@ -28,6 +28,7 @@ public struct SidebarView: View {
                         HStack {
                             Label {
                                 Text(category.title)
+                                    .font(.system(size: 13))
                             } icon: {
                                 Image(systemName: category.systemImage)
                                     .foregroundStyle(categoryColor(category))
@@ -38,9 +39,9 @@ public struct SidebarView: View {
                             if let badge = category.badge {
                                 Text(badge)
                                     .font(.system(size: 9, weight: .bold))
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.pink.opacity(0.18))
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 1.5)
+                                    .background(Color.pink.opacity(0.15))
                                     .foregroundStyle(.pink)
                                     .clipShape(Capsule())
                             }
@@ -48,7 +49,7 @@ public struct SidebarView: View {
                             let size = state.categorySize(category)
                             if size > 0 {
                                 Text(state.categoryFormattedSize(category))
-                                    .font(.caption2)
+                                    .font(.system(size: 11, design: .rounded))
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -56,35 +57,45 @@ public struct SidebarView: View {
                 }
             }
 
-            Section("Tools") {
+            Section("Utilities") {
                 NavigationLink(value: NavigationItem.maintenance) {
-                    Label("Maintenance", systemImage: "wrench.and.screwdriver.fill")
-                        .foregroundStyle(.primary)
+                    Label {
+                        Text("Maintenance")
+                            .font(.system(size: 13))
+                    } icon: {
+                        Image(systemName: "wrench.and.screwdriver")
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 NavigationLink(value: NavigationItem.spaceLens) {
-                    Label("Space Lens", systemImage: "circle.grid.cross.fill")
-                        .foregroundStyle(.primary)
+                    Label {
+                        Text("Space Lens")
+                            .font(.system(size: 13))
+                    } icon: {
+                        Image(systemName: "circle.grid.cross")
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
         .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(spacing: 0) {
                 Divider()
                 HStack(spacing: 6) {
                     Circle()
                         .fill(Color.green)
-                        .frame(width: 8, height: 8)
+                        .frame(width: 7, height: 7)
 
                     Text("100% Local • Zero Telemetry")
-                        .font(.caption2)
+                        .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
             }
-            .background(.regularMaterial)
+            .background(Color(nsColor: .windowBackgroundColor))
         }
     }
 
