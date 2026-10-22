@@ -2,13 +2,13 @@ import SwiftUI
 import AppKit
 import CleanyCore
 
-/// Modern, obsidian-glass file/folder row displaying path, size, checkbox, and explanation.
+/// Native Apple HIG List Row for individual junk files and folders.
+/// Uses semantic typography, hierarchical SF Symbols, and standard AppKit Finder integration.
 public struct JunkRowView: View {
     public let item: JunkItem
     public let onToggle: () -> Void
 
     @LocalVar private var isExpanded: Bool = false
-    @LocalVar private var isHovered: Bool = false
 
     public init(item: JunkItem, onToggle: @escaping () -> Void) {
         self.item = item
@@ -16,8 +16,8 @@ public struct JunkRowView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 12) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 10) {
                 // Checkbox
                 Toggle("", isOn: Binding(
                     get: { item.isSelected },
@@ -26,112 +26,78 @@ public struct JunkRowView: View {
                 .toggleStyle(.checkbox)
                 .labelsHidden()
 
-                // File/Folder Glyph
-                ZStack {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(item.isDirectory ? Color.blue.opacity(0.18) : Color.white.opacity(0.08))
-                        .frame(width: 28, height: 28)
+                // File or Folder Icon
+                Image(systemName: item.isDirectory ? "folder.fill" : "doc.fill")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(item.isDirectory ? Color.accentColor : Color.secondary)
+                    .font(.system(size: 16))
+                    .frame(width: 20)
 
-                    Image(systemName: item.isDirectory ? "folder.fill" : "doc.fill")
-                        .foregroundStyle(item.isDirectory ? Color.cyan : Color.white.opacity(0.7))
-                        .font(.system(size: 13))
-                }
-
-                // Name & Subtitle
-                VStack(alignment: .leading, spacing: 1.5) {
+                // Item Name and Category Subtitle
+                VStack(alignment: .leading, spacing: 2) {
                     Text(item.displayName)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.95))
+                        .font(.body)
+                        .foregroundStyle(.primary)
                         .lineLimit(1)
 
                     Text(item.subtitle)
-                        .font(.system(size: 10.5))
-                        .foregroundStyle(.white.opacity(0.45))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
 
                 Spacer()
 
-                // Size Badge
+                // Formatted Size
                 Text(item.formattedSize)
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 3.5)
-                    .background(
-                        Capsule()
-                            .fill(Color.white.opacity(0.08))
-                            .overlay(Capsule().stroke(Color.white.opacity(0.12), lineWidth: 0.8))
-                    )
+                    .font(.callout)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.primary)
+                    .monospacedDigit()
 
-                // Expand Chevron
+                // Reveal in Finder Button
                 Button {
                     SoundHaptics.tap()
+                    NSWorkspace.shared.selectFile(item.path, inFileViewerRootedAtPath: "")
+                } label: {
+                    Image(systemName: "arrow.up.forward.app")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.borderless)
+                .help("Mostra nel Finder")
+
+                // Info / Disclosure Toggle
+                Button {
                     withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
                         isExpanded.toggle()
                     }
                 } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.45))
-                        .rotationEffect(.degrees(isExpanded ? 90 : 0))
-                        .frame(width: 22, height: 22)
-                        .background(Circle().fill(Color.white.opacity(isHovered ? 0.08 : 0.02)))
+                    Image(systemName: isExpanded ? "chevron.up.circle.fill" : "info.circle")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
+                .help("Dettagli percorso")
             }
 
-            // Expanded File Inspection Drawer
+            // Expanded Path Information
             if isExpanded {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(item.path)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .textSelection(.enabled)
+
                     Text(item.explanation)
-                        .font(.system(size: 11.5))
-                        .foregroundStyle(.white.opacity(0.65))
-
-                    HStack(spacing: 8) {
-                        Text(item.path)
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundStyle(.white.opacity(0.45))
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-
-                        Spacer()
-
-                        Button {
-                            SoundHaptics.tap()
-                            NSWorkspace.shared.selectFile(item.path, inFileViewerRootedAtPath: "")
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text("Reveal in Finder")
-                                    .font(.system(size: 11, weight: .semibold))
-                                Image(systemName: "arrow.up.forward.app")
-                                    .font(.system(size: 10))
-                            }
-                            .foregroundStyle(Color.cyan)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.cyan.opacity(0.12))
-                            .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
                 }
-                .padding(.leading, 40)
-                .padding(.top, 4)
+                .padding(.leading, 32)
+                .padding(.top, 2)
             }
         }
-        .padding(.vertical, 9)
-        .padding(.horizontal, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isHovered ? Color.white.opacity(0.07) : Color.white.opacity(0.03))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(isHovered ? Color.white.opacity(0.14) : Color.white.opacity(0.04), lineWidth: 1)
-        )
-        .onHover { hovering in
-            isHovered = hovering
-        }
+        .padding(.vertical, 3)
     }
 }

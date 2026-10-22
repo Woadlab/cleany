@@ -9,7 +9,7 @@ struct CleanyApp: App {
         WindowGroup {
             NavigationSplitView {
                 SidebarView(state: state)
-                    .navigationSplitViewColumnWidth(min: 230, ideal: 245, max: 280)
+                    .navigationSplitViewColumnWidth(min: 210, ideal: 230, max: 270)
             } detail: {
                 switch state.selectedNav {
                 case .smartCare:
@@ -22,43 +22,43 @@ struct CleanyApp: App {
                     SpaceLensView(state: state)
                 }
             }
-            .frame(minWidth: 980, minHeight: 680)
+            .frame(minWidth: 880, minHeight: 580)
             .navigationTitle("Cleany")
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
                     if state.totalFoundBytes > 0 && !state.isScanning && !state.isCleaning {
                         Button {
-                            SoundHaptics.tap()
+                            SoundHaptics.clean()
                             state.cleanSelected()
                         } label: {
-                            Label("Clean to Trash", systemImage: "trash")
+                            Label("Sposta nel Cestino", systemImage: "trash")
                         }
-                        .help("Clean selected items to Trash (⌘⌫)")
+                        .help("Sposta gli elementi selezionati nel Cestino (⌘⌫)")
                     }
 
                     Button {
                         SoundHaptics.tap()
                         state.startScanAll()
                     } label: {
-                        Label(state.isScanning ? "Scanning..." : "Scan", systemImage: "arrow.clockwise")
+                        Label(state.isScanning ? "Scansione..." : "Scansiona", systemImage: "arrow.clockwise")
                     }
                     .disabled(state.isScanning || state.isCleaning)
-                    .help("Scan Mac (⌘R)")
+                    .help("Scansiona Mac (⌘R)")
                 }
             }
         }
         .windowStyle(.titleBar)
-        .windowToolbarStyle(.unifiedCompact)
+        .windowToolbarStyle(.unified)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("Start Full Scan") {
+                Button("Avvia Scansione Completa") {
                     state.startScanAll()
                 }
                 .keyboardShortcut("r", modifiers: .command)
             }
 
-            CommandMenu("Clean") {
-                Button("Clean to Trash") {
+            CommandMenu("Pulizia") {
+                Button("Sposta nel Cestino") {
                     state.cleanSelected()
                 }
                 .keyboardShortcut(.delete, modifiers: .command)

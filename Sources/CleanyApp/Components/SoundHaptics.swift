@@ -15,4 +15,8 @@ public enum SoundHaptics {
         NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .default)
         NSSound(named: "Blow")?.play()
     }
+
+    public static func clean() {
+        cleanSuccess()
+    }
 }
