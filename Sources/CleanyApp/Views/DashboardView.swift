@@ -8,6 +8,10 @@ public struct DashboardView: View {
         self.state = state
     }
 
+    private var categorySizes: [(JunkCategory, UInt64)] {
+        JunkCategory.allCases.map { ($0, state.categorySize($0)) }
+    }
+
     public var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -21,21 +25,23 @@ public struct DashboardView: View {
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
-                .padding(.top, 20)
+                .padding(.top, 18)
 
-                // Central Gauge
+                // Central Proportional Arc Gauge
                 ScanningGaugeView(
                     isScanning: state.isScanning,
                     hasScanned: state.hasCompletedInitialScan,
                     formattedSize: state.formattedTotalBytes,
                     itemCount: state.totalFoundCount,
-                    currentPath: state.scanProgress?.currentPath
+                    currentPath: state.scanProgress?.currentPath,
+                    categorySizes: categorySizes
                 )
 
                 // Action controls
                 HStack(spacing: 14) {
                     if !state.hasCompletedInitialScan && !state.isScanning {
                         Button {
+                            SoundHaptics.tap()
                             state.startScanAll()
                         } label: {
                             Label("Scan Mac", systemImage: "sparkle.magnifyingglass")
@@ -44,8 +50,10 @@ public struct DashboardView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.blue)
+                        .keyboardShortcut("r", modifiers: .command)
                     } else {
                         Button {
+                            SoundHaptics.tap()
                             state.startScanAll()
                         } label: {
                             Label(state.isScanning ? "Scanning..." : "Rescan", systemImage: "arrow.clockwise")
@@ -54,9 +62,11 @@ public struct DashboardView: View {
                         }
                         .buttonStyle(.bordered)
                         .disabled(state.isScanning || state.isCleaning)
+                        .keyboardShortcut("r", modifiers: .command)
 
                         if state.totalFoundBytes > 0 {
                             Button {
+                                SoundHaptics.tap()
                                 state.cleanSelected()
                             } label: {
                                 Label(
@@ -69,6 +79,7 @@ public struct DashboardView: View {
                             .buttonStyle(.borderedProminent)
                             .tint(.blue)
                             .disabled(state.isScanning || state.isCleaning)
+                            .keyboardShortcut(.delete, modifiers: .command)
                         }
                     }
                 }
@@ -99,14 +110,18 @@ public struct DashboardView: View {
                     .padding(.horizontal, 32)
                 }
 
-                // Category Cards Grid
+                // Category Cards Grid with Proportional Share
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 180, maximum: 230), spacing: 16)], spacing: 16) {
                     ForEach(JunkCategory.allCases) { category in
                         let items = state.itemsByCategory[category] ?? []
+                        let catSize = state.categorySize(category)
+                        let percentage = state.totalFoundBytes > 0 ? Double(catSize) / Double(state.totalFoundBytes) : 0.0
+
                         MetricCardView(
                             category: category,
                             count: items.count,
                             formattedSize: state.categoryFormattedSize(category),
+                            percentage: percentage,
                             isSelected: false,
                             onSelect: {
                                 state.selectedNav = .category(category)
@@ -119,12 +134,12 @@ public struct DashboardView: View {
                 // Privacy Trust Bar
                 HStack(spacing: 24) {
                     Label("100% Local Execution", systemImage: "shield.lefthalf.filled")
-                    Label("Undoable macOS Trash", systemImage: "arrow.uturn.backward.circle")
+                    Label("Undoable via ⌘Z in Trash", systemImage: "arrow.uturn.backward.circle")
                     Label("Zero Daemons / Zero Tracking", systemImage: "lock.circle")
                 }
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary.opacity(0.8))
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.bottom, 24)
             }
         }
@@ -132,15 +147,15 @@ public struct DashboardView: View {
 
     private var headerSubtitle: String {
         if state.isScanning {
-            return "Scanning system directories and AI tool storage..."
+            return "Deep scanning system directories, developer artifacts & AI tool storage..."
         } else if state.hasCompletedInitialScan {
             if state.totalFoundBytes > 0 {
                 return "Found \(state.formattedTotalBytes) across \(state.totalFoundCount) safe-to-remove items."
             } else {
-                return "Your Mac is clean and running at peak condition."
+                return "Your Mac is clean and running at peak performance."
             }
         } else {
-            return "Scan your Mac locally for AI clutter, developer caches, and leftovers."
+            return "Scan your Mac locally for AI clutter, developer caches, system junk, and trash."
         }
     }
 }

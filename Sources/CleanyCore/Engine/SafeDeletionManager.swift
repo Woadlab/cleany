@@ -1,6 +1,8 @@
 import Foundation
+import AppKit
 
 /// Coordinates safe file removal. Defaults to moving items to macOS Trash for undoability.
+/// When cleaning items that are already in the Trash, purges them permanently.
 public enum SafeDeletionManager {
 
     public enum DeletionMode: Sendable {
@@ -28,13 +30,28 @@ public enum SafeDeletionManager {
                 continue
             }
 
+            let isAlreadyInTrash = item.category == .trashBins ||
+                item.path.contains("/.Trash/") ||
+                item.path.hasSuffix("/.Trash")
+
             do {
-                switch mode {
-                case .moveToTrash:
+                if isAlreadyInTrash || mode == .permanentDelete {
+                    // Try direct removeItem first; fallback to Finder AppleScript if TCC blocks direct rm
+                    do {
+                        try fileManager.removeItem(at: item.url)
+                    } catch {
+                        let script = """
+                        tell application "Finder"
+                            try
+                                delete (POSIX file "\(item.path)" as alias)
+                            end try
+                        end tell
+                        """
+                        _ = NSAppleScript(source: script)?.executeAndReturnError(nil)
+                    }
+                } else {
                     var resultingURL: NSURL?
                     try fileManager.trashItem(at: item.url, resultingItemURL: &resultingURL)
-                case .permanentDelete:
-                    try fileManager.removeItem(at: item.url)
                 }
 
                 totalBytesReclaimed += item.size

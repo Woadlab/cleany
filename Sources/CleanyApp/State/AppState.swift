@@ -71,6 +71,7 @@ public final class AppState: ObservableObject {
             self.hasCompletedInitialScan = true
             self.isScanning = false
             self.scanProgress = nil
+            SoundHaptics.scanComplete()
         }
     }
 
@@ -89,6 +90,7 @@ public final class AppState: ObservableObject {
             self.itemsByCategory[category] = items
             self.isScanning = false
             self.scanProgress = nil
+            SoundHaptics.scanComplete()
         }
     }
 
@@ -113,6 +115,9 @@ public final class AppState: ObservableObject {
             }
 
             self.isCleaning = false
+            if result.itemsRemovedCount > 0 {
+                SoundHaptics.cleanSuccess()
+            }
         }
     }
 

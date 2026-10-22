@@ -21,10 +21,48 @@ struct CleanyApp: App {
                     SpaceLensView(state: state)
                 }
             }
-            .frame(minWidth: 920, minHeight: 620)
+            .frame(minWidth: 940, minHeight: 640)
             .navigationTitle("Cleany")
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    if state.totalFoundBytes > 0 && !state.isScanning && !state.isCleaning {
+                        Button {
+                            SoundHaptics.tap()
+                            state.cleanSelected()
+                        } label: {
+                            Label("Clean to Trash", systemImage: "trash")
+                        }
+                        .help("Clean selected items to Trash (⌘⌫)")
+                    }
+
+                    Button {
+                        SoundHaptics.tap()
+                        state.startScanAll()
+                    } label: {
+                        Label(state.isScanning ? "Scanning..." : "Scan", systemImage: "arrow.clockwise")
+                    }
+                    .disabled(state.isScanning || state.isCleaning)
+                    .help("Scan Mac (⌘R)")
+                }
+            }
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unifiedCompact)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("Start Full Scan") {
+                    state.startScanAll()
+                }
+                .keyboardShortcut("r", modifiers: .command)
+            }
+
+            CommandMenu("Clean") {
+                Button("Clean to Trash") {
+                    state.cleanSelected()
+                }
+                .keyboardShortcut(.delete, modifiers: .command)
+                .disabled(state.totalFoundBytes == 0 || state.isCleaning)
+            }
+        }
     }
 }
